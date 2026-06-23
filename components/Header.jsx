@@ -35,7 +35,7 @@ export default function Header() {
   if(isLoading) return <LoadingScreen />;
 
   return (
-    <header className="relative z-100 flex items-center justify-between gap-6 md:gap-0 bg-grey-700 px-6 md:px-12 py-4 md:py-0 md:h-20">
+    <header className="relative z-100 flex items-center justify-between gap-6 md:gap-0 bg-grey-700 px-6 lg:px-12 py-4 md:py-0 md:h-20">
       <nav className="hidden md:flex flex-col sm:flex-row items-center order-2 md:order-1 flex-1 md:basis-2/5">
         <Link
           href="/"
@@ -92,20 +92,20 @@ export default function Header() {
         ) : isLoading ? (
           <span className="h-5" />
         ) : (
-          <>
+          <div className="flex gap-3 md:gap-6 items-center">
             <Link
               href="/login"
-              className="text-grey-100 uppercase text-base font-normal transition-transform hover:-translate-y-0.5"
+              className="text-grey-100 uppercase text-sm md:text-base font-normal transition-transform hover:-translate-y-0.5"
             >
               Log in
             </Link>
             <Link
               href="/signup"
-              className="text-grey-100 uppercase text-base font-normal rounded-full border border-current px-6 py-2 transition-all hover:bg-grey-100 hover:text-grey-600"
+              className="text-grey-100 uppercase text-sm md:text-base font-normal rounded-full border border-current px-6 py-2 transition-all hover:bg-grey-100 hover:text-grey-600"
             >
               Sign up
             </Link>
-          </>
+          </div>
         )}
       </nav>
     </header>
