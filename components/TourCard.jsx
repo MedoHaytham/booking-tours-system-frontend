@@ -15,7 +15,7 @@ export default function TourCard({ tour }) {
     : '—';
 
   return (
-    <div className="rounded-sm overflow-hidden shadow-card bg-white flex flex-col transition-transform duration-300 hover:-translate-y-1">
+    <div className="rounded-xl overflow-hidden shadow-card bg-white flex flex-col transition-transform duration-300 hover:-translate-y-1">
       <div className="relative">
         <div className="relative h-[220px] clip-card-picture">
           <Image

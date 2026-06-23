@@ -61,7 +61,7 @@ export default function Header() {
             <button
               type="button"
               onClick={handleLogout}
-              className="hidden md:flex text-grey-100 uppercase text-base font-normal transition-transform hover:-translate-y-0.5 cursor-pointer"
+              className="hidden lg:flex text-grey-100 uppercase text-base font-normal transition-transform hover:-translate-y-0.5 cursor-pointer"
             >
               Log out
             </button>
@@ -86,7 +86,7 @@ export default function Header() {
                   {user.name?.[0]}
                 </span>
               )}
-              <span>{user.name?.split(' ')[0]}</span>
+              <span className="max-w-[120px] truncate lg:max-w-[150px] xl:max-w-[170px]">{user.name?.split(' ')[0]}</span>
             </Link>
           </>
         ) : isLoading ? (
