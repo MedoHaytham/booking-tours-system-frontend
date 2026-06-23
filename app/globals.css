@@ -1,26 +1,197 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --section-rotate: 9vw;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  /* Colors */
+  --color-primary-light: #7dd56f;
+  --color-primary: #55c57a;
+  --color-primary-dark: #28b487;
+  --color-primary-focus: #2e864b;
+
+  --color-grey-50: #fcfcfc;
+  --color-grey-100: #f7f7f7;
+  --color-grey-200: #f2f2f2;
+  --color-grey-300: #e0e0e0;
+  --color-grey-400: #bbb;
+  --color-grey-500: #999;
+  --color-grey-600: #777;
+  --color-grey-700: #444;
+
+  --color-success: #20bf6b;
+  --color-error: #eb4d4b;
+  --color-error-light: #ff7730;
+
+  /* Font */
+  --font-sans: "Lato", sans-serif;
+
+  /* Backgrounds */
+  --background-image-gradient-primary:
+    linear-gradient(to right bottom, #7dd56f, #28b487);
+
+  --background-image-gradient-primary-soft:
+    linear-gradient(
+      to bottom right,
+      rgba(125, 213, 111, 0.85),
+      rgba(40, 180, 135, 0.85)
+    );
+
+  --background-image-gradient-error:
+    linear-gradient(to right, #ff7730, #eb4d4b);
+
+  --background-image-gradient-primary-text:
+    linear-gradient(to right, #7dd56f, #28b487);
+
+  /* Shadows */
+  --shadow-card: 0 1.5rem 4rem rgba(0, 0, 0, 0.1);
+  --shadow-login: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
+  --shadow-cta: 0 3rem 8rem 0.5rem rgba(0, 0, 0, 0.15);
+  --shadow-userview: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.07);
+  --shadow-alert: 0 2rem 4rem rgba(0, 0, 0, 0.25);
+
+  /* Animations */
+  --animate-move-in-bottom: moveInBottom 0.5s ease-out;
+  --animate-logo-pulse: logoPulse 1.8s ease-in-out infinite;
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
+::selection {
+  background-color: #55c57a;
+  color: white;
+}
+
+html {
+  scroll-behavior: smooth;
+}
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: #777;
+  line-height: 1.6;
+}
+
+.reviews-scroll {
+  scroll-snap-type: x mandatory;
+}
+
+.reviews-scroll > * {
+  scroll-snap-align: center;
+}
+
+.marker {
+  background-image: url("/img/pin.png");
+  background-size: cover;
+  width: 32px;
+  height: 40px;
+}
+
+.mapboxgl-popup {
+  max-width: 25rem;
+}
+
+.mapboxgl-popup-content {
+  text-align: center;
+  font-family: "Lato", sans-serif;
+  padding: 0.6rem !important;
+  font-size: 0.8rem;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.form__upload {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+@utility clip-hero {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - var(--section-rotate)),
+    0 100%
+  );
+}
+
+@utility clip-angled {
+  clip-path: polygon(
+    0 var(--section-rotate),
+    100% 0,
+    100% calc(100% - var(--section-rotate)),
+    0 100%
+  );
+}
+
+@utility clip-card-picture {
+  clip-path: polygon(0 0, 100% 0%, 100% 83%, 0% 98%);
+}
+
+@utility pull-up {
+  margin-top: calc(-1 * var(--section-rotate));
+}
+
+@utility heading-primary-span {
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+@utility skeleton {
+  background-color: #e2e5e7;
+  background-image: linear-gradient(
+    90deg,
+    rgba(255,255,255,0),
+    rgba(255,255,255,.5),
+    rgba(255,255,255,0)
+  );
+  background-size: 40px 100%;
+  background-repeat: no-repeat;
+  background-position: left -40px top 0;
+  animation: shine 1s ease infinite;
+}
+
+@utility logo-fade {
+  animation: logo-fade 1.4s ease-in-out infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position: right -40px top 0;
+  }
+}
+
+@keyframes logo-fade {
+  0%,100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: .25;
+  }
+}
+
+@keyframes moveInBottom {
+  0% {
+    opacity: 0;
+    transform: translateY(3rem);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes logoPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.08);
+    opacity: .65;
+  }
 }
