@@ -12,8 +12,8 @@ export default function AccountPage() {
   if (!isReady) return <LoadingScreen />;
 
   return (
-    <main className="bg-grey-100 min-h-[60vh] px-0 py-0 md:px-12 md:py-20">
-      <div className="bg-white max-w-[120rem] mx-auto min-h-screen md:min-h-0 rounded-none md:rounded-sm overflow-hidden shadow-userview flex flex-col md:flex-row">
+    <main className="bg-grey-100 min-h-[60vh]">
+      <div className="bg-white max-w-[120rem] mx-auto min-h-screen md:min-h-0 rounded-none md:rounded-sm overflow-hidden shadow-userview flex flex-col lg:flex-row">
         <SideNav active="settings" isAdmin={user.role === 'admin'} />
 
         <div className="flex-1 py-12 md:py-28">

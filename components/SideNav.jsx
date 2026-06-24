@@ -11,7 +11,7 @@ import { useAlert } from '@/context/AlertContext';
 const items = [
   { href: '/me', label: 'Settings', icon: Settings, key: 'settings' },
   { href: '/my-tours', label: 'My bookings', icon: Briefcase, key: 'bookings' },
-  { href: '#', label: 'My reviews', icon: Star, key: 'reviews' },
+  { href: '/my-reviews', label: 'My reviews', icon: Star, key: 'reviews' },
   { href: '#', label: 'Billing', icon: CreditCard, key: 'billing' },
 ];
 
@@ -61,7 +61,7 @@ export default function SideNav({ active = 'settings', isAdmin = false }) {
   };
 
   return (
-    <nav className="flex-none w-full md:w-lg bg-gradient-primary py-12 flex flex-col">
+    <nav className="flex-none 2xl:w-[20rem] bg-gradient-primary py-12 flex flex-col">
       <ul className="list-none">
         {items.map(({ key, ...item }) => (
           <NavItem key={key} {...item} isActive={key === active} />
