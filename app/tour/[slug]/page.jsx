@@ -29,7 +29,7 @@ export default function TourPage({ params }) {
   
   if (isLoading) {
     return (
-      <main className="bg-grey-100 min-h-[60vh] px-6 py-20 flex items-center justify-center">
+      <main className="bg-grey-100 min-h-[77vh] px-6 py-20 flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
       </main>
     );
