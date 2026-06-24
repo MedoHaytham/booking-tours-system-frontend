@@ -16,7 +16,7 @@ export default function MyReviews() {
   if (!isReady) return <LoadingScreen />;
 
   return (
-    <main className="bg-grey-100 min-h-[60vh]">
+    <main className="bg-grey-100 min-h-[77vh]">
       <div className="bg-white max-w-[120rem] mx-auto min-h-screen md:min-h-0 rounded-none md:rounded-sm overflow-hidden shadow-userview flex flex-col lg:flex-row">
         <SideNav active="reviews" isAdmin={user.role === 'admin'} />
 

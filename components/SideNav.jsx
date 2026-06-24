@@ -61,7 +61,7 @@ export default function SideNav({ active = 'settings', isAdmin = false }) {
   };
 
   return (
-    <nav className="flex-none 2xl:w-[20rem] bg-gradient-primary py-12 flex flex-col">
+    <nav className="flex-none 2xl:w-[20rem] bg-gradient-primary py-12 flex flex-col lg:min-h-[77vh]">
       <ul className="list-none">
         {items.map(({ key, ...item }) => (
           <NavItem key={key} {...item} isActive={key === active} />
