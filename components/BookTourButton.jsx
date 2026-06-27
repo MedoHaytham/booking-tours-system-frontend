@@ -38,7 +38,7 @@ export default function BookTourButton({ tourId, date }) {
     return (
       <button
         disabled
-        className="bg-primary text-white uppercase text-base rounded-full px-10 py-4 opacity-60 cursor-not-allowed"
+        className="w-full sm:w-[370px] bg-primary text-white uppercase text-sm sm:text-base rounded-full px-4 sm:px-10 py-4 opacity-60 cursor-not-allowed"
       >
         Book tour now!
       </button>
@@ -50,7 +50,7 @@ export default function BookTourButton({ tourId, date }) {
     return (
       <Link
         href="/login"
-        className="inline-block bg-primary text-white uppercase text-base rounded-full px-10 py-4 transition-transform hover:-translate-y-0.5"
+        className="inline-block text-center w-full sm:w-[370px] bg-primary text-white uppercase text-sm sm:text-base rounded-full px-4 sm:px-10 py-4 transition-transform hover:-translate-y-0.5"
       >
         Log in to book tour
       </Link>
@@ -92,12 +92,12 @@ export default function BookTourButton({ tourId, date }) {
   };
 
   return (
-    <div className="flex flex-col items-center sm:items-end gap-2">
+    <div className="w-full flex flex-col items-center sm:items-end gap-2">
       <button
         type="button"
         onClick={handleBooking}
         disabled={loading || date.soldOut || isPassed || isTourBooked}
-        className={`w-[370px] bg-primary text-white uppercase text-base rounded-full px-10 py-4 transition-transform hover:-translate-y-0.5 ${(date.soldOut || isPassed || isTourBooked) ? 'opacity-60 cursor-not-allowed' : 'disabled:opacity-60 disabled:cursor-not-allowed'} mb-5`}
+        className={`w-full sm:w-[370px] bg-primary text-white uppercase text-sm sm:text-base rounded-full px-4 sm:px-10 py-4 transition-transform hover:-translate-y-0.5 ${(date.soldOut || isPassed || isTourBooked) ? 'opacity-60 cursor-not-allowed' : 'disabled:opacity-60 disabled:cursor-not-allowed'} mb-5`}
       >
         {isPassed
           ? `Date Passed — ${new Date(date.startDate).toLocaleString('en-US', { month: 'long', year: 'numeric' })}`

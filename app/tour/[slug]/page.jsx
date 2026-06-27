@@ -244,7 +244,7 @@ export default function TourPage({ params }) {
             <p className="text-lg text-grey-600 pr-3">
               {tour.duration} days. 1 adventure. Infinite memories. Make it yours today!
             </p>
-            <div className="sm:row-span-2 sm:self-center justify-self-center sm:justify-self-end">
+            <div className="w-full max-w-[370px] sm:row-span-2 sm:self-center justify-self-center sm:justify-self-end">
               {[...tour.startDates]
                 .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
                 .map((date) => (
