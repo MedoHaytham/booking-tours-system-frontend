@@ -46,11 +46,14 @@ export default function TourPage({ params }) {
   }
 
 
-  const nextDate = tour.startDates?.[0]
-    ? new Date(tour.startDates[0]).toLocaleString('en-US', {
-        month: 'long',
-        year: 'numeric',
-      })
+  const now = new Date();
+  const nextDateObj = tour.startDates
+    ? [...tour.startDates]
+        .filter((d) => !d.soldOut && new Date(d.startDate) > now)
+        .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))[0]
+    : undefined;
+  const nextDate = nextDateObj
+    ? new Date(nextDateObj.startDate).toLocaleString('en-US', { month: 'long', year: 'numeric' })
     : '—';
 
   const paragraphs = (tour.description || '').split('\n').filter(Boolean);
@@ -242,7 +245,11 @@ export default function TourPage({ params }) {
               {tour.duration} days. 1 adventure. Infinite memories. Make it yours today!
             </p>
             <div className="sm:row-span-2 sm:self-center justify-self-center sm:justify-self-end">
-              <BookTourButton tourId={tour._id || tour.id} />
+              {[...tour.startDates]
+                .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
+                .map((date) => (
+                  <BookTourButton key={date._id || date.id} tourId={tour._id || tour.id} date={date}/>
+                ))}
             </div>
           </div>
         </div>

@@ -15,7 +15,7 @@ const bookingApiSlice = apiSlice.injectEndpoints({
     // The API returns { session: { url: '...' } }. Redirect the browser to
     // session.url to complete payment on Stripe's hosted page.
     getCheckoutSession: builder.query({
-      query: (tourId) => `/bookings/checkout-session/${tourId}`,
+      query: ({ tourId, dateId }) => `/bookings/checkout-session/${tourId}/${dateId}`,
     }),
 
     // ── My booked tours ───────────────────────────────────────────────────

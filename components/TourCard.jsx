@@ -7,11 +7,14 @@ export default function TourCard({ tour }) {
     ? tour.imageCover
     : `/img/tours/${tour.imageCover}`;
 
-  const nextDate = tour.startDates?.[0]
-    ? new Date(tour.startDates[0]).toLocaleString('en-US', {
-        month: 'long',
-        year: 'numeric',
-      })
+  const now = new Date();
+  const nextDateObj = tour.startDates
+    ? [...tour.startDates]
+        .filter((d) => !d.soldOut && new Date(d.startDate) > now)
+        .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))[0]
+    : undefined;
+  const nextDate = nextDateObj
+    ? new Date(nextDateObj.startDate).toLocaleString('en-US', { month: 'long', year: 'numeric' })
     : '—';
 
   return (
@@ -25,6 +28,13 @@ export default function TourCard({ tour }) {
             sizes="(min-width: 1024px) 33vw, 100vw"
             className="object-cover"
           />
+          {tour.available === false && (
+            <div className="absolute top-0 left-0 w-[110px] h-[110px] overflow-hidden z-30 pointer-events-none">
+              <div className="absolute top-[22px] left-[-28px] w-[130px] bg-[#e02020] text-white text-center text-[11px] font-extrabold tracking-[1.5px] uppercase py-[5px] -rotate-45 shadow-[0_2px_8px_rgba(0,0,0,0.35)]">
+                Sold Out
+              </div>
+            </div>
+          )}
         </div>
         <h3 className="absolute bottom-4 right-5 z-20 w-[70%] text-right text-2xl sm:text-[27.5px] text-white font-light uppercase leading-[1.6]">
           <span className="heading-primary-span bg-gradient-primary-soft px-[15px] py-[10px] leading-none">

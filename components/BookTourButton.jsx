@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { loadStripe } from '@stripe/stripe-js';
 import { useGetMeQuery } from '@/features/userSlice';
-import { useLazyGetCheckoutSessionQuery } from '@/features/bookingSlice';
+import { useLazyGetCheckoutSessionQuery, useGetMyToursQuery } from '@/features/bookingSlice';
 
 // Singleton Stripe instance — only created once, on demand
 let stripePromise;
@@ -15,9 +15,19 @@ function getStripe() {
   return stripePromise;
 }
 
-export default function BookTourButton({ tourId }) {
+export default function BookTourButton({ tourId, date }) {
   const { data: meData, isLoading: authLoading } = useGetMeQuery();
   const user = meData?.data?.data ?? null;
+
+  const { data: myToursData } = useGetMyToursQuery(undefined, { skip: !user });
+  const bookedDates = myToursData?.data?.bookedDates ?? [];
+  const isPassed = new Date(date.startDate) < new Date();
+  const activeBooking = bookedDates.find(
+    (b) =>
+      b.tourId === tourId?.toString() &&
+      new Date(b.date).getTime() === new Date(date.startDate).getTime()
+  );
+  const isTourBooked = !!activeBooking && !isPassed;
 
   const [triggerCheckout] = useLazyGetCheckoutSessionQuery();
   const [loading, setLoading] = useState(false);
@@ -47,11 +57,12 @@ export default function BookTourButton({ tourId }) {
     );
   }
 
+
   const handleBooking = async () => {
     setLoading(true);
     setBookingError(null);
     try {
-      const result = await triggerCheckout(tourId);
+      const result = await triggerCheckout({ tourId, dateId: date.id });
 
       if (result.error) {
         throw new Error(result.error.data?.message || result.error.error || 'Could not create booking session.');
@@ -85,10 +96,18 @@ export default function BookTourButton({ tourId }) {
       <button
         type="button"
         onClick={handleBooking}
-        disabled={loading}
-        className="bg-primary text-white uppercase text-base rounded-full px-10 py-4 transition-transform hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed"
+        disabled={loading || date.soldOut || isPassed || isTourBooked}
+        className={`w-[370px] bg-primary text-white uppercase text-base rounded-full px-10 py-4 transition-transform hover:-translate-y-0.5 ${(date.soldOut || isPassed || isTourBooked) ? 'opacity-60 cursor-not-allowed' : 'disabled:opacity-60 disabled:cursor-not-allowed'} mb-5`}
       >
-        {loading ? 'Processing…' : 'Book tour now!'}
+        {isPassed
+          ? `Date Passed — ${new Date(date.startDate).toLocaleString('en-US', { month: 'long', year: 'numeric' })}`
+          : isTourBooked
+          ? `✓ Booked — ${new Date(activeBooking.date).toLocaleString('en-US', { month: 'long', year: 'numeric' })}`
+          : date.soldOut
+          ? `The date ${new Date(date.startDate).toLocaleString('en-US', { month: 'long', year: 'numeric' })} is sold out`
+          : loading
+          ? 'Processing…'
+          : `Book tour with date ${new Date(date.startDate).toLocaleString('en-US', { month: 'long', year: 'numeric' })}`}
       </button>
       {bookingError && (
         <p className="text-sm text-red-500 max-w-xs text-center sm:text-right">
