@@ -49,7 +49,7 @@ export default function MyReviews() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-10">
               {reviews.map((review) => (
-                <ReviewCard key={review._id} review={review} hideUser />
+                <ReviewCard key={review._id} review={review} hideUser className="w-full" />
               ))}
             </div>
           )}
