@@ -237,7 +237,7 @@ export default function TourPage({ params }) {
             />
           </div>
 
-          <div className="grid sm:grid-cols-[1fr_auto] gap-x-8 gap-y-4 items-center text-center sm:text-left">
+          <div className="grid lg:grid-cols-[1fr_auto] gap-x-8 gap-y-6 items-center text-center sm:text-left">
             <div className="flex flex-col gap-2">
               <h2 className="text-2xl uppercase font-bold bg-gradient-primary-text bg-clip-text text-transparent tracking-wide">
                 What are you waiting for?
@@ -246,7 +246,7 @@ export default function TourPage({ params }) {
                 {tour.duration} days. 1 adventure. Infinite memories. Make it yours today!
               </p>
             </div>
-            <div className="w-full max-w-[370px] justify-self-center sm:justify-self-end">
+            <div className="w-full max-w-[370px] justify-self-center sm:justify-self-start lg:justify-self-end">
               {[...tour.startDates]
                 .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
                 .map((date) => (

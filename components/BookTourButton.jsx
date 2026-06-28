@@ -92,7 +92,7 @@ export default function BookTourButton({ tourId, date }) {
   };
 
   return (
-    <div className="w-full flex flex-col items-center sm:items-end gap-2">
+    <div className="w-full flex flex-col items-center sm:items-start lg:items-end gap-2">
       <button
         type="button"
         onClick={handleBooking}
@@ -110,7 +110,7 @@ export default function BookTourButton({ tourId, date }) {
           : `Book tour with date ${new Date(date.startDate).toLocaleString('en-US', { month: 'long', year: 'numeric' })}`}
       </button>
       {bookingError && (
-        <p className="text-sm text-red-500 max-w-xs text-center sm:text-right">
+        <p className="text-sm text-red-500 max-w-xs text-center sm:text-left lg:text-right">
           {bookingError}
         </p>
       )}

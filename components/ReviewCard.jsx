@@ -26,7 +26,7 @@ export default function ReviewCard({ review, hideUser }) {
             height={45}
             className="rounded-full mr-4 object-cover h-18 w-18"
           />
-          <h6 className="text-sm font-bold uppercase">{review.user?.name}</h6>
+          <h6 className="w-60 md:w-50 line-clamp-1 text-sm font-bold uppercase ">{review.user?.name}</h6>
         </div>
       )}
       <p className="text-sm italic mb-8 self-start">{review.review}</p>
