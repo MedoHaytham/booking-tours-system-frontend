@@ -5,26 +5,30 @@ const reviewApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getMyReviews: builder.query({
       query: () => "/reviews/my-reviews",
+      providesTags: ["Review"],
     }),
     addReview: builder.mutation({
-      query: (review) => ({
-        url: "/reviews",
+      query: ({tourId, review }) => ({
+        url: `/tours/${tourId}/reviews`,
         method: "POST",
         body: review,
       }),
+      invalidatesTags: ["Tour", "Review"]
     }),
     updateReview: builder.mutation({
       query: ({ id, review }) => ({
         url: `/reviews/${id}`,
-        method: "PUT",
+        method: "PATCH",
         body: review,
       }),
+      invalidatesTags: ["Tour", "Review"]
     }),
     deleteReview: builder.mutation({
       query: (id) => ({
         url: `/reviews/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Tour", "Review"]
     }),
   }),
 });

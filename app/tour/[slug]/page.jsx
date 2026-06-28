@@ -8,8 +8,11 @@ import { Clock, MapPin, Calendar, TrendingUp, User, Star } from 'lucide-react';
 import ReviewCard from '@/components/ReviewCard';
 import TourMap from '@/components/TourMap';
 import BookTourButton from '@/components/BookTourButton';
+import ReviewForm from '@/components/ReviewForm';
 
 import { useGetTourBySlugQuery } from '@/features/tourSlice';
+import { useGetMeQuery } from '@/features/userSlice';
+import { useGetMyToursQuery } from '@/features/bookingSlice';
 
 
 function srcFor(path, folder) {
@@ -20,12 +23,23 @@ function srcFor(path, folder) {
 
 
 export default function TourPage({ params }) {
-
   const { slug } = use(params);
-  const { data, isLoading, error } = useGetTourBySlugQuery(slug);
+  const { data, isLoading, error, refetch } = useGetTourBySlugQuery(slug);
   const tour = data?.data?.tour;
   const fetchError = error ? (error.data?.message || error.error || 'Failed to load tour') : null;
   
+  const { data: meData } = useGetMeQuery();
+  const user = meData?.data?.data ?? null;
+
+  const { data: myToursData } = useGetMyToursQuery(undefined, { skip: !user });
+  const bookedDates = myToursData?.data?.bookedDates ?? [];
+
+  // Is user booked this tour and date has passed
+  const canReview = bookedDates.some(
+    (b) =>
+      b.tourId === (tour?._id || tour?.id)?.toString() &&
+      new Date(b.date) < new Date()
+  );
   
   if (isLoading) {
     return (
@@ -204,6 +218,13 @@ export default function TourPage({ params }) {
           ))}
         </div>
       </section>
+
+      {/* ADD REVIEWS */}
+      {canReview && (
+        <section className="pull-up pt-20 md:pt-[14vw] pb-48 relative z-1000 bg-gradient-primary clip-angled">
+          <ReviewForm tourId={tour._id} onSuccess={() => refetch()} />
+        </section>
+      )}
 
       {/* CTA */}
       <section className="pull-up bg-grey-100 px-6 sm:px-12 pt-32 md:pt-[24vw] lg:pt-60 pb-20">
