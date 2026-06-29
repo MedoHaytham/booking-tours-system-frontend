@@ -20,8 +20,6 @@ function srcFor(path, folder) {
   return path.startsWith('http') ? path : `/img/${folder}/${path}`;
 }
 
-
-
 export default function TourPage({ params }) {
   const { slug } = use(params);
   const { data, isLoading, error, refetch } = useGetTourBySlugQuery(slug);
