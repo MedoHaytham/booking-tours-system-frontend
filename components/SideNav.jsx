@@ -12,7 +12,6 @@ const items = [
   { href: '/me', label: 'Settings', icon: Settings, key: 'settings' },
   { href: '/my-tours', label: 'My bookings', icon: Briefcase, key: 'bookings' },
   { href: '/my-reviews', label: 'My reviews', icon: Star, key: 'reviews' },
-  { href: '#', label: 'Billing', icon: CreditCard, key: 'billing' },
 ];
 
 const adminItems = [
