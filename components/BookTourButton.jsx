@@ -33,6 +33,9 @@ export default function BookTourButton({ tourId, date }) {
   const [loading, setLoading] = useState(false);
   const [bookingError, setBookingError] = useState(null);
 
+  const formattedDate = (dateStr) =>
+  new Date(dateStr).toLocaleString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+
   // While checking auth, show a neutral disabled button
   if (authLoading) {
     return (
@@ -99,15 +102,17 @@ export default function BookTourButton({ tourId, date }) {
         disabled={loading || date.soldOut || isPassed || isTourBooked}
         className={`w-full sm:w-[370px] bg-primary text-white uppercase text-sm sm:text-base rounded-full px-4 sm:px-10 py-4 transition-transform hover:-translate-y-0.5 ${(date.soldOut || isPassed || isTourBooked) ? 'opacity-60 cursor-not-allowed' : 'disabled:opacity-60 disabled:cursor-not-allowed'} mb-5`}
       >
-        {isPassed
-          ? `Date Passed — ${new Date(date.startDate).toLocaleString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}`
-          : isTourBooked
-          ? `✓ Booked — ${new Date(activeBooking.date).toLocaleString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}`
-          : date.soldOut
-          ? `The date ${new Date(date.startDate).toLocaleString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })} is sold out`
-          : loading
-          ? 'Processing…'
-          : `Book date ${new Date(date.startDate).toLocaleString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}`}
+        {isPassed ? (
+          <>Date Passed — <span className="font-bold">{formattedDate(date.startDate)}</span></>
+        ) : isTourBooked ? (
+          <>✓ Booked — <span className="font-bold">{formattedDate(activeBooking.date)}</span></>
+        ) : date.soldOut ? (
+          <>Sold out — <span className="font-bold">{formattedDate(date.startDate)}</span></>
+        ) : loading ? (
+          'Processing…'
+        ) : (
+          <>Book date - <span className="font-bold">{formattedDate(date.startDate)}</span></>
+        )}
       </button>
       {bookingError && (
         <p className="text-sm text-red-500 max-w-xs text-center sm:text-left lg:text-right">
