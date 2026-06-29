@@ -100,14 +100,14 @@ export default function BookTourButton({ tourId, date }) {
         className={`w-full sm:w-[370px] bg-primary text-white uppercase text-sm sm:text-base rounded-full px-4 sm:px-10 py-4 transition-transform hover:-translate-y-0.5 ${(date.soldOut || isPassed || isTourBooked) ? 'opacity-60 cursor-not-allowed' : 'disabled:opacity-60 disabled:cursor-not-allowed'} mb-5`}
       >
         {isPassed
-          ? `Date Passed — ${new Date(date.startDate).toLocaleString('en-US', { month: 'long', year: 'numeric' })}`
+          ? `Date Passed — ${new Date(date.startDate).toLocaleString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}`
           : isTourBooked
-          ? `✓ Booked — ${new Date(activeBooking.date).toLocaleString('en-US', { month: 'long', year: 'numeric' })}`
+          ? `✓ Booked — ${new Date(activeBooking.date).toLocaleString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}`
           : date.soldOut
-          ? `The date ${new Date(date.startDate).toLocaleString('en-US', { month: 'long', year: 'numeric' })} is sold out`
+          ? `The date ${new Date(date.startDate).toLocaleString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })} is sold out`
           : loading
           ? 'Processing…'
-          : `Book tour with date ${new Date(date.startDate).toLocaleString('en-US', { month: 'long', year: 'numeric' })}`}
+          : `Book date ${new Date(date.startDate).toLocaleString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}`}
       </button>
       {bookingError && (
         <p className="text-sm text-red-500 max-w-xs text-center sm:text-left lg:text-right">
