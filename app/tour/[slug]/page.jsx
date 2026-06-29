@@ -34,8 +34,14 @@ export default function TourPage({ params }) {
   const { data: myToursData } = useGetMyToursQuery(undefined, { skip: !user });
   const bookedDates = myToursData?.data?.bookedDates ?? [];
 
+  // Check if user has already reviewed this tour
+  const hasReviewed = (tour?.reviews || []).some(
+    (r) => r.user?._id?.toString() === user?._id?.toString()
+        || r.user?.toString() === user?._id?.toString()
+  );
+
   // Is user booked this tour and date has passed
-  const canReview = bookedDates.some(
+  const canReview = !hasReviewed && bookedDates.some(
     (b) =>
       b.tourId === (tour?._id || tour?.id)?.toString() &&
       new Date(b.date) < new Date()
