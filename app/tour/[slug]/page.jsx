@@ -97,11 +97,11 @@ export default function TourPage({ params }) {
             </span>
           </h1>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-6 md:gap-12 text-grey-100">
-            <div className="flex items-center gap-2 font-bold uppercase text-sm [text-shadow:0_0.5rem_2rem_rgba(0,0,0,0.15)]">
+            <div className="flex items-center gap-2 font-bold uppercase text-sm [text-shadow:0_0.5rem_2rem_rgba(0,0,0,0.15)] bg-gradient-primary px-2 py-1 rounded-sm">
               <Clock size={20} className="drop-shadow" />
               <span>{tour.duration} days</span>
             </div>
-            <div className="flex items-center gap-2 font-bold uppercase text-sm [text-shadow:0_0.5rem_2rem_rgba(0,0,0,0.15)]">
+            <div className="flex items-center gap-2 font-bold uppercase text-sm [text-shadow:0_0.5rem_2rem_rgba(0,0,0,0.15)] bg-gradient-primary px-2 py-1 rounded-sm">
               <MapPin size={20} className="drop-shadow" />
               <span>{tour.startLocation?.description}</span>
             </div>
