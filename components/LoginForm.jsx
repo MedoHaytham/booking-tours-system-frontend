@@ -4,11 +4,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLoginMutation } from '@/features/authSlice';
 import { useAlert } from '@/context/AlertContext';
+import { EyeOffIcon, EyeIcon } from 'lucide-react';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   
   const [login, { isLoading: loading }] = useLoginMutation();
   const router = useRouter();
@@ -26,7 +28,6 @@ export default function LoginForm() {
       setErrorMsg(err?.data?.message || err?.message || 'Could not log in. Try again.');
     }
   };
-
 
   return (
     <form onSubmit={handleSubmit} className="space-y-10">
@@ -54,16 +55,25 @@ export default function LoginForm() {
         <label htmlFor="password" className="block text-base font-bold mb-2">
           Password
         </label>
-        <input
-          id="password"
-          type="password"
-          required
-          minLength={8}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="••••••••"
-          className="block w-full rounded-[4px] bg-grey-200 border-t-[3px] border-b-[3px] border-transparent px-7 py-5 text-sm transition-all focus:outline-none focus:border-b-primary placeholder:text-grey-400"
-        />
+        <div className='relative'>
+          <input
+            id="password"
+            type={showPassword ? 'text' : 'password'}
+            required
+            minLength={8}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            className="block w-full rounded-[4px] bg-grey-200 border-t-[3px] border-b-[3px] border-transparent px-7 py-5 text-sm transition-all focus:outline-none focus:border-b-primary placeholder:text-grey-400"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-grey-400 hover:text-grey-600 transition-colors"
+          >
+            {showPassword ? <EyeOffIcon size={20} /> : <EyeIcon size={20} />}
+          </button>
+        </div>
       </div>
 
       <div>
