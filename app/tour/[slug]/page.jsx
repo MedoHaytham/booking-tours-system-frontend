@@ -211,14 +211,15 @@ export default function TourPage({ params }) {
       </section>
 
       {/* REVIEWS */}
-      <section className="pull-up pt-20 md:pt-[14vw] pb-48 relative z-1000 bg-gradient-primary clip-angled">
-        <div className="reviews-scroll flex gap-12 overflow-x-auto px-12 py-8">
-          {(tour.reviews || []).map((review) => (
-            <ReviewCard key={review._id || review.review} review={review} />
-          ))}
-        </div>
-      </section>
-
+      {tour.reviews?.length > 0 && (
+        <section className="pull-up pt-20 md:pt-[14vw] pb-48 relative z-1000 bg-gradient-primary clip-angled">
+          <div className="reviews-scroll flex gap-12 overflow-x-auto px-12 py-8">
+            {(tour.reviews || []).map((review) => (
+              <ReviewCard key={review._id || review.review} review={review} />
+            ))}
+          </div>
+        </section>
+      )}
       {/* ADD REVIEWS */}
       {canReview && (
         <section className="pull-up pt-20 md:pt-[14vw] pb-48 relative z-1000 bg-gradient-primary clip-angled">
