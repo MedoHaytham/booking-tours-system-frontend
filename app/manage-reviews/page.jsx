@@ -24,6 +24,7 @@ import {
   useDeleteReviewMutation,
 } from '@/features/reviewSlice';
 import { useAlert } from '@/context/AlertContext';
+import ReviewTextCell from '@/components/ReviewTextCell';
 
 export default function ManageReviewsPage() {
   const { user, isReady } = useAuthGuard();
@@ -39,6 +40,14 @@ export default function ManageReviewsPage() {
   }, [isReady, user, router, showAlert]);
 
   const [queryParams, setQueryParams] = useState({ page: 1, limit: 10, search: '', rating: '' });
+  const [expandedReviews, setExpandedReviews] = useState({});
+
+  const toggleExpand = (id) => {
+    setExpandedReviews(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
 
   // Fetch all reviews
   const { data: responseData, isLoading, error } = useGetAllReviewsQuery(
@@ -218,138 +227,175 @@ export default function ManageReviewsPage() {
                 <p className="text-sm mt-1">{error?.data?.message || error?.message || 'Please try again later.'}</p>
               </div>
             ) : (
-              <div className="overflow-x-auto bg-white rounded-xl border border-grey-200 shadow-sm">
-                <table className="w-full border-collapse text-left">
-                  <thead>
-                    <tr className="bg-grey-50 border-b border-grey-200">
-                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Tour</th>
-                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Reviewer</th>
-                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Rating</th>
-                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Review Text</th>
-                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Created Date</th>
-                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-grey-200">
-                    {reviews.length === 0 ? (
-                      <tr>
-                        <td colSpan={6} className="px-6 py-10 text-center text-sm text-grey-500">
-                          No reviews found matching your search criteria.
-                        </td>
+              <div className="rounded-xl border border-grey-200 shadow-sm overflow-hidden">
+                {/* Scrollable table area */}
+                <div className="overflow-x-auto bg-white">
+                  <table className="w-full border-collapse text-left">
+                    <thead>
+                      <tr className="bg-grey-50 border-b border-grey-200">
+                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Tour</th>
+                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Reviewer</th>
+                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Rating</th>
+                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Review Text</th>
+                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Created Date</th>
+                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500 text-right">Actions</th>
                       </tr>
-                    ) : (
-                      reviews.map((r) => {
-                        const reviewerPhoto = r.user?.photo?.startsWith('http')
-                          ? r.user.photo
-                          : `/img/users/${r.user?.photo || 'default.jpg'}`;
-                        return (
-                          <tr key={r._id} className="hover:bg-grey-50/50 transition-colors">
-                            {/* Tour Name */}
-                            <td className="px-6 py-4 font-semibold text-sm text-grey-700 max-w-xs truncate">
-                              {r.tour?.name || <span className="text-grey-400 italic">Deleted Tour</span>}
-                            </td>
+                    </thead>
+                    <tbody className="divide-y divide-grey-200">
+                      {reviews.length === 0 ? (
+                        <tr>
+                          <td colSpan={6} className="px-6 py-10 text-center text-sm text-grey-500">
+                            No reviews found matching your search criteria.
+                          </td>
+                        </tr>
+                      ) : (
+                        reviews.map((r) => {
+                          const reviewerPhoto = r.user?.photo?.startsWith('http')
+                            ? r.user.photo
+                            : `/img/users/${r.user?.photo || 'default.jpg'}`;
+                          return (
+                            <tr key={r._id} className="hover:bg-grey-50/50 transition-colors">
+                              {/* Tour Name */}
+                              <td className="px-6 py-4 font-semibold text-sm text-grey-700 max-w-xs truncate">
+                                {r.tour?.name || <span className="text-grey-400 italic">Deleted Tour</span>}
+                              </td>
 
-                            {/* User/Reviewer Profile */}
-                            <td className="px-6 py-4 flex items-center gap-3">
-                              <div className="relative w-10 h-10 shrink-0">
-                                <Image
-                                  src={reviewerPhoto}
-                                  alt={r.user?.name || 'Reviewer'}
-                                  fill
-                                  sizes="40px"
-                                  className="rounded-full object-cover border border-grey-200"
+                              {/* User/Reviewer Profile */}
+                              <td className="px-6 py-4 flex items-center gap-3">
+                                <div className="relative w-10 h-10 shrink-0">
+                                  <Image
+                                    src={reviewerPhoto}
+                                    alt={r.user?.name || 'Reviewer'}
+                                    fill
+                                    sizes="40px"
+                                    className="rounded-full object-cover border border-grey-200"
+                                  />
+                                </div>
+                                <span className="font-medium text-sm text-grey-700 truncate max-w-40">
+                                  {r.user?.name || <span className="text-grey-400 italic">Deleted User</span>}
+                                </span>
+                              </td>
+
+                              {/* Star Rating */}
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="flex items-center gap-2">
+                                  <StarRating rating={r.rating} size={15} />
+                                  <span className="text-xs text-grey-500 font-bold">({r.rating})</span>
+                                </div>
+                              </td>
+
+                              {/* Review Content */}
+                              <td className="px-6 py-4 text-sm text-grey-600 max-w-sm">
+                                <ReviewTextCell
+                                  review={r.review}
+                                  isExpanded={!!expandedReviews[r._id]}
+                                  toggleExpand={() => toggleExpand(r._id)}
                                 />
-                              </div>
-                              <span className="font-medium text-sm text-grey-700 truncate max-w-40">
-                                {r.user?.name || <span className="text-grey-400 italic">Deleted User</span>}
-                              </span>
-                            </td>
+                              </td>
 
-                            {/* Star Rating */}
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center gap-2">
-                                <StarRating rating={r.rating} size={15} />
-                                <span className="text-xs text-grey-500 font-bold">({r.rating})</span>
-                              </div>
-                            </td>
+                              {/* Date */}
+                              <td className="px-6 py-4 text-sm text-grey-500 whitespace-nowrap">
+                                <div className="flex items-center gap-2">
+                                  <Calendar size={14} className="text-grey-400" />
+                                  {formatDate(r.createdAt)}
+                                </div>
+                              </td>
 
-                            {/* Review Content */}
-                            <td className="px-6 py-4 text-sm text-grey-600 max-w-sm">
-                              <p className="line-clamp-2 leading-relaxed" title={r.review}>
-                                {r.review}
-                              </p>
-                            </td>
+                              {/* Actions */}
+                              <td className="px-6 py-4 text-right whitespace-nowrap">
+                                <button
+                                  onClick={() => setDeletingReview(r)}
+                                  className="p-2 rounded-full hover:bg-red-50 text-red-500 transition-colors cursor-pointer"
+                                  title="Delete Review"
+                                >
+                                  <Trash2 size={16} />
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
 
-                            {/* Date */}
-                            <td className="px-6 py-4 text-sm text-grey-500 whitespace-nowrap">
-                              <div className="flex items-center gap-2">
-                                <Calendar size={14} className="text-grey-400" />
-                                {formatDate(r.createdAt)}
-                              </div>
-                            </td>
+                {/* Pagination — outside the scrollable area so it stays fixed */}
+                {reviews.length > 0 && (() => {
+                  const MAX_VISIBLE = 5;
+                  const half = Math.floor(MAX_VISIBLE / 2);
+                  let start = Math.max(1, queryParams.page - half);
+                  let end = start + MAX_VISIBLE - 1;
+                  if (end > totalPages) {
+                    end = totalPages;
+                    start = Math.max(1, end - MAX_VISIBLE + 1);
+                  }
+                  const pageRange = Array.from({ length: end - start + 1 }, (_, idx) => start + idx);
+                  return (
+                    <div className="sticky bottom-0 z-10 px-6 py-4 bg-grey-50 border-t border-grey-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                      <p className="text-sm text-grey-600">
+                        Showing {((queryParams.page - 1) * queryParams.limit) + 1} to {Math.min(queryParams.page * queryParams.limit, total)} of {total} reviews
+                      </p>
 
-                            {/* Actions */}
-                            <td className="px-6 py-4 text-right whitespace-nowrap">
-                              <button
-                                onClick={() => setDeletingReview(r)}
-                                className="p-2 rounded-full hover:bg-red-50 text-red-500 transition-colors cursor-pointer"
-                                title="Delete Review"
-                              >
-                                <Trash2 size={16} />
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    )}
-                  </tbody>
-                </table>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={() => setQueryParams(prev => ({ ...prev, page: prev.page - 1 }))}
+                          disabled={queryParams.page === 1}
+                          className="p-2 rounded-lg border border-grey-200 text-grey-600 hover:bg-grey-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed mr-1 font-semibold"
+                          title="Previous Page"
+                        >
+                          &larr;
+                        </button>
 
-                {/* Pagination Controls */}
-                {reviews.length > 0 && (
-                  <div className="px-6 py-4 bg-grey-50 border-t border-grey-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <p className="text-sm text-grey-600">
-                      Showing {((queryParams.page - 1) * queryParams.limit) + 1} to {Math.min(queryParams.page * queryParams.limit, total)} of {total} reviews
-                    </p>
+                        {start > 1 && (
+                          <>
+                            <button
+                              onClick={() => setQueryParams(prev => ({ ...prev, page: 1 }))}
+                              className="w-9 h-9 rounded-lg border border-grey-200 text-sm font-semibold flex items-center justify-center transition-colors cursor-pointer text-grey-600 hover:bg-grey-100"
+                            >
+                              1
+                            </button>
+                            {start > 2 && <span className="text-grey-400 font-bold px-1">…</span>}
+                          </>
+                        )}
 
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => setQueryParams(prev => ({ ...prev, page: prev.page - 1 }))}
-                        disabled={queryParams.page === 1}
-                        className="p-2 rounded-lg border border-grey-200 text-grey-600 hover:bg-grey-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed mr-1 font-semibold"
-                        title="Previous Page"
-                      >
-                        &larr;
-                      </button>
-
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
-                        const isActive = pageNum === queryParams.page;
-                        return (
+                        {pageRange.map((pageNum) => (
                           <button
                             key={pageNum}
                             onClick={() => setQueryParams(prev => ({ ...prev, page: pageNum }))}
                             className={`w-9 h-9 rounded-lg border text-sm font-semibold flex items-center justify-center transition-colors cursor-pointer ${
-                              isActive
+                              pageNum === queryParams.page
                                 ? 'bg-primary text-white border-primary shadow-sm'
                                 : 'border-grey-200 text-grey-600 hover:bg-grey-100'
                             }`}
                           >
                             {pageNum}
                           </button>
-                        );
-                      })}
+                        ))}
 
-                      <button
-                        onClick={() => setQueryParams(prev => ({ ...prev, page: prev.page + 1 }))}
-                        disabled={queryParams.page === totalPages}
-                        className="p-2 rounded-lg border border-grey-200 text-grey-600 hover:bg-grey-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed ml-1 font-semibold"
-                        title="Next Page"
-                      >
-                        &rarr;
-                      </button>
+                        {end < totalPages && (
+                          <>
+                            {end < totalPages - 1 && <span className="text-grey-400 font-bold px-1">…</span>}
+                            <button
+                              onClick={() => setQueryParams(prev => ({ ...prev, page: totalPages }))}
+                              className="w-9 h-9 rounded-lg border border-grey-200 text-sm font-semibold flex items-center justify-center transition-colors cursor-pointer text-grey-600 hover:bg-grey-100"
+                            >
+                              {totalPages}
+                            </button>
+                          </>
+                        )}
+
+                        <button
+                          onClick={() => setQueryParams(prev => ({ ...prev, page: prev.page + 1 }))}
+                          disabled={queryParams.page === totalPages}
+                          className="p-2 rounded-lg border border-grey-200 text-grey-600 hover:bg-grey-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed ml-1 font-semibold"
+                          title="Next Page"
+                        >
+                          &rarr;
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
               </div>
             )}
           </div>

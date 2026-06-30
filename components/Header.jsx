@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { Menu } from 'lucide-react';
 import apiSlice from "@/api/apiSlice";
@@ -22,6 +22,19 @@ export default function Header() {
   const user = data?.data?.data ?? null;
   const isAuthenticated = !!user;
   const { open: openSidebar } = useSidebar();
+  const pathname = usePathname();
+
+  const dashboardRoutes = [
+    '/me',
+    '/my-tours',
+    '/my-reviews',
+    '/manage-tours',
+    '/manage-users',
+    '/manage-reviews',
+    '/manage-bookings'
+  ];
+
+  const showHamburger = isAuthenticated && dashboardRoutes.includes(pathname);
 
   const handleLogout = async () => {
     try {
@@ -40,7 +53,7 @@ export default function Header() {
   return (
     <header className="relative z-100 flex items-center justify-between gap-6 md:gap-0 bg-grey-700 px-6 lg:px-12 py-4 md:py-0 md:h-20">
       {/* Hamburger — mobile/tablet only, shown when a dashboard page is active */}
-      {isAuthenticated && (
+      {showHamburger && (
         <button
           onClick={openSidebar}
           className="lg:hidden flex items-center justify-center w-10 h-10 rounded-full text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0"

@@ -73,7 +73,7 @@ export default function ReviewCard({ review, hideUser, myReview, className = 'w-
     <div className={`${className} p-4 md:p-6 bg-grey-100 rounded-sm shadow-card flex flex-col items-center scroll-snap-align-center`}>
 
       {/* Tour name + actions */}
-      {review.tour && (
+      {review.tour && myReview && (
         <div className='w-full flex justify-between'>
           <Link
             href={`/tour/${review.tour.slug}`}

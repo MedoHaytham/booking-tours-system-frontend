@@ -219,128 +219,165 @@ export default function ManageUsersPage() {
                 <p className="text-sm mt-1">{error?.data?.message || error?.message || 'Please try again later.'}</p>
               </div>
             ) : (
-              <div className="overflow-x-auto bg-white rounded-xl border border-grey-200 shadow-sm">
-                <table className="w-full border-collapse text-left">
-                  <thead>
-                    <tr className="bg-grey-50 border-b border-grey-200">
-                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">User</th>
-                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Email</th>
-                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Role</th>
+              <div className="rounded-xl border border-grey-200 shadow-sm overflow-hidden">
+                {/* Scrollable table area */}
+                <div className="overflow-x-auto bg-white">
+                  <table className="w-full border-collapse text-left">
+                    <thead>
+                      <tr className="bg-grey-50 border-b border-grey-200">
+                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">User</th>
+                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Email</th>
+                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Role</th>
 
-                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-grey-200">
-                    {users.length === 0 ? (
-                      <tr>
-                        <td colSpan={4} className="px-6 py-10 text-center text-sm text-grey-500">
-                          No users found matching your search.
-                        </td>
+                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500 text-right">Actions</th>
                       </tr>
-                    ) : (
-                      users?.map((u) => {
-                        const userPhoto = u.photo?.startsWith('http')
-                          ? u.photo
-                          : `/img/users/${u.photo || 'default.jpg'}`;
-                        const isSelf = user._id === u._id;
-                        return (
-                          <tr key={u._id} className="hover:bg-grey-50/50 transition-colors">
-                            <td className="px-6 py-4 flex items-center gap-3">
-                              <Image
-                                src={userPhoto}
-                                alt={u.name}
-                                width={40}
-                                height={40}
-                                className="rounded-full object-cover w-10 h-10 border border-grey-200"
-                              />
-                              <span className="w-41 font-semibold text-sm text-grey-700 line-clamp-2">{u.name}</span>
-                              {isSelf && (
-                                <span className="text-[10px] bg-grey-200 text-grey-600 font-bold px-1.5 py-0.5 rounded uppercase ml-2">
-                                  You
+                    </thead>
+                    <tbody className="divide-y divide-grey-200">
+                      {users.length === 0 ? (
+                        <tr>
+                          <td colSpan={4} className="px-6 py-10 text-center text-sm text-grey-500">
+                            No users found matching your search.
+                          </td>
+                        </tr>
+                      ) : (
+                        users?.map((u) => {
+                          const userPhoto = u.photo?.startsWith('http')
+                            ? u.photo
+                            : `/img/users/${u.photo || 'default.jpg'}`;
+                          const isSelf = user._id === u._id;
+                          return (
+                            <tr key={u._id} className="hover:bg-grey-50/50 transition-colors">
+                              <td className="px-6 py-4 flex items-center gap-3">
+                                <Image
+                                  src={userPhoto}
+                                  alt={u.name}
+                                  width={40}
+                                  height={40}
+                                  className="rounded-full object-cover w-10 h-10 border border-grey-200"
+                                />
+                                <span className="w-41 font-semibold text-sm text-grey-700 line-clamp-2">{u.name}</span>
+                                {isSelf && (
+                                  <span className="text-[10px] bg-grey-200 text-grey-600 font-bold px-1.5 py-0.5 rounded uppercase ml-2">
+                                    You
+                                  </span>
+                                )}
+                              </td>
+                              <td className="max-w-60 xl:max-w-40 px-6 py-4 text-sm text-grey-600 truncate">{u.email}</td>
+                              <td className="px-6 py-4">
+                                <span className={`${u.role === 'lead-guide' ? 'w-25' : 'w-fit'} inline-block px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider border ${getRoleBadgeClass(u.role)}`}>
+                                  {u.role}
                                 </span>
-                              )}
-                            </td>
-                            <td className="max-w-60 xl:max-w-40 px-6 py-4 text-sm text-grey-600 truncate">{u.email}</td>
-                            <td className="px-6 py-4">
-                              <span className={`${u.role === 'lead-guide' ? 'w-25' : 'w-fit'} inline-block px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider border ${getRoleBadgeClass(u.role)}`}>
-                                {u.role}
-                              </span>
-                            </td>
+                              </td>
 
-                            <td className="px-6 py-4 text-right">
-                              <div className="flex items-center justify-end gap-3">
-                                <button
-                                  onClick={() => {
-                                    setEditingUser(u);
-                                    setSelectedRole(u.role);
-                                  }}
-                                  className="p-2 rounded-full hover:bg-grey-100 text-primary transition-colors cursor-pointer"
-                                  title="Edit Role"
-                                >
-                                  <Edit size={16} />
-                                </button>
-                                <button
-                                  onClick={() => setDeletingUser(u)}
-                                  className={`p-2 rounded-full hover:bg-red-50 text-red-500 transition-colors cursor-pointer ${
-                                    isSelf ? 'opacity-30 cursor-not-allowed' : ''
-                                  }`}
-                                  title={isSelf ? 'Cannot delete yourself' : 'Delete User'}
-                                  disabled={isSelf}
-                                >
-                                  <Trash2 size={16} />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    )}
-                  </tbody>
-                </table>
+                              <td className="px-6 py-4 text-right">
+                                <div className="flex items-center justify-end gap-3">
+                                  <button
+                                    onClick={() => {
+                                      setEditingUser(u);
+                                      setSelectedRole(u.role);
+                                    }}
+                                    className="p-2 rounded-full hover:bg-grey-100 text-primary transition-colors cursor-pointer"
+                                    title="Edit Role"
+                                  >
+                                    <Edit size={16} />
+                                  </button>
+                                  <button
+                                    onClick={() => setDeletingUser(u)}
+                                    className={`p-2 rounded-full hover:bg-red-50 text-red-500 transition-colors cursor-pointer ${
+                                      isSelf ? 'opacity-30 cursor-not-allowed' : ''
+                                    }`}
+                                    title={isSelf ? 'Cannot delete yourself' : 'Delete User'}
+                                    disabled={isSelf}
+                                  >
+                                    <Trash2 size={16} />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
 
-                {/* Pagination Controls */}
-                {users?.length > 0 && (
-                  <div className="px-6 py-4 bg-grey-50 border-t border-grey-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <p>Showing {((queryParams.page - 1) * queryParams.limit) + 1} to {Math.min(queryParams.page * queryParams.limit, total)} of {total} users</p>
+                {/* Pagination Controls — Sticky outside the scrollable table */}
+                {users?.length > 0 && (() => {
+                  const MAX_VISIBLE = 5;
+                  const half = Math.floor(MAX_VISIBLE / 2);
+                  let start = Math.max(1, queryParams.page - half);
+                  let end = start + MAX_VISIBLE - 1;
+                  if (end > totalPages) {
+                    end = totalPages;
+                    start = Math.max(1, end - MAX_VISIBLE + 1);
+                  }
+                  const pageRange = Array.from({ length: end - start + 1 }, (_, idx) => start + idx);
+                  return (
+                    <div className="sticky bottom-0 z-10 px-6 py-4 bg-grey-50 border-t border-grey-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                      <p className="text-sm text-grey-600">
+                        Showing {((queryParams.page - 1) * queryParams.limit) + 1} to {Math.min(queryParams.page * queryParams.limit, total)} of {total} users
+                      </p>
 
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => setQueryParams(prev => ({ ...prev, page: prev.page - 1 }))}
-                        disabled={queryParams.page === 1}
-                        className="p-2 rounded-lg border border-grey-200 text-grey-600 hover:bg-grey-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed mr-1 font-semibold"
-                        title="Previous Page"
-                      >
-                        &larr;
-                      </button>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={() => setQueryParams(prev => ({ ...prev, page: prev.page - 1 }))}
+                          disabled={queryParams.page === 1}
+                          className="p-2 rounded-lg border border-grey-200 text-grey-600 hover:bg-grey-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed mr-1 font-semibold"
+                          title="Previous Page"
+                        >
+                          &larr;
+                        </button>
 
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
-                        const isActive = pageNum === queryParams.page;
-                        return (
+                        {start > 1 && (
+                          <>
+                            <button
+                              onClick={() => setQueryParams(prev => ({ ...prev, page: 1 }))}
+                              className="w-9 h-9 rounded-lg border border-grey-200 text-sm font-semibold flex items-center justify-center transition-colors cursor-pointer text-grey-600 hover:bg-grey-100"
+                            >
+                              1
+                            </button>
+                            {start > 2 && <span className="text-grey-400 font-bold px-1">…</span>}
+                          </>
+                        )}
+
+                        {pageRange.map((pageNum) => (
                           <button
                             key={pageNum}
                             onClick={() => setQueryParams(prev => ({ ...prev, page: pageNum }))}
                             className={`w-9 h-9 rounded-lg border text-sm font-semibold flex items-center justify-center transition-colors cursor-pointer ${
-                              isActive
+                              pageNum === queryParams.page
                                 ? 'bg-primary text-white border-primary shadow-sm'
                                 : 'border-grey-200 text-grey-600 hover:bg-grey-100'
                             }`}
                           >
                             {pageNum}
                           </button>
-                        );
-                      })}
+                        ))}
 
-                      <button
-                        onClick={() => setQueryParams(prev => ({ ...prev, page: prev.page + 1 }))}
-                        disabled={queryParams.page === totalPages}
-                        className="p-2 rounded-lg border border-grey-200 text-grey-600 hover:bg-grey-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed ml-1 font-semibold"
-                        title="Next Page"
-                      >
-                        &rarr;
-                      </button>
+                        {end < totalPages && (
+                          <>
+                            {end < totalPages - 1 && <span className="text-grey-400 font-bold px-1">…</span>}
+                            <button
+                              onClick={() => setQueryParams(prev => ({ ...prev, page: totalPages }))}
+                              className="w-9 h-9 rounded-lg border border-grey-200 text-sm font-semibold flex items-center justify-center transition-colors cursor-pointer text-grey-600 hover:bg-grey-100"
+                            >
+                              {totalPages}
+                            </button>
+                          </>
+                        )}
+
+                        <button
+                          onClick={() => setQueryParams(prev => ({ ...prev, page: prev.page + 1 }))}
+                          disabled={queryParams.page === totalPages}
+                          className="p-2 rounded-lg border border-grey-200 text-grey-600 hover:bg-grey-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed ml-1 font-semibold"
+                          title="Next Page"
+                        >
+                          &rarr;
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
               </div>
             )}
           </div>
