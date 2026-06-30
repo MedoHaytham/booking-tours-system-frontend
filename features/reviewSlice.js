@@ -7,6 +7,19 @@ const reviewApiSlice = apiSlice.injectEndpoints({
       query: () => "/reviews/my-reviews",
       providesTags: ["Review"],
     }),
+    getAllReviews: builder.query({
+      query: ({ page = 1, limit = 10, search = '', rating = '' } = {}) => {
+        const params = { page, limit };
+        if (search) params.search = search;
+        if (rating) params.rating = rating;
+        return { url: "/reviews", params };
+      },
+      providesTags: ["Review"],
+    }),
+    getReviewsStats: builder.query({
+      query: () => "/reviews/stats",
+      providesTags: ["Review"],
+    }),
     addReview: builder.mutation({
       query: ({tourId, review }) => ({
         url: `/tours/${tourId}/reviews`,
@@ -37,5 +50,7 @@ export const {
   useGetMyReviewsQuery, 
   useAddReviewMutation, 
   useUpdateReviewMutation, 
-  useDeleteReviewMutation 
+  useDeleteReviewMutation,
+  useGetAllReviewsQuery,
+  useGetReviewsStatsQuery
 } = reviewApiSlice;
