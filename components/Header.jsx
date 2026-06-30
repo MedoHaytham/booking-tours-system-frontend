@@ -4,10 +4,12 @@ import Image from "next/image";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
+import { Menu } from 'lucide-react';
 import apiSlice from "@/api/apiSlice";
 import { useGetMeQuery } from "@/features/userSlice";
 import { useLogoutMutation } from "@/features/authSlice";
 import { useAlert } from "@/context/AlertContext";
+import { useSidebar } from "@/context/SidebarContext";
 import LoadingScreen from "@/components/LoadingScreen";
 
 export default function Header() {
@@ -19,6 +21,7 @@ export default function Header() {
 
   const user = data?.data?.data ?? null;
   const isAuthenticated = !!user;
+  const { open: openSidebar } = useSidebar();
 
   const handleLogout = async () => {
     try {
@@ -36,6 +39,17 @@ export default function Header() {
 
   return (
     <header className="relative z-100 flex items-center justify-between gap-6 md:gap-0 bg-grey-700 px-6 lg:px-12 py-4 md:py-0 md:h-20">
+      {/* Hamburger — mobile/tablet only, shown when a dashboard page is active */}
+      {isAuthenticated && (
+        <button
+          onClick={openSidebar}
+          className="lg:hidden flex items-center justify-center w-10 h-10 rounded-full text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0"
+          title="Open Menu"
+          aria-label="Open navigation menu"
+        >
+          <Menu size={22} />
+        </button>
+      )}
       <nav className="hidden md:flex flex-col sm:flex-row items-center order-2 md:order-1 flex-1 md:basis-2/5">
         <Link
           href="/"

@@ -3,6 +3,7 @@ import "./globals.css";
 
 import StoreProvider from "../components/StoreProvider";
 import { AlertProvider } from "../context/AlertContext";
+import { SidebarProvider } from "../context/SidebarContext";
 import Alert from "../components/Alert";
 
 import Header from "../components/Header";
@@ -36,10 +37,12 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col">
         <StoreProvider>
           <AlertProvider>
-            <Alert />
-            <Header />
-            {children}
-            <Footer />
+            <SidebarProvider>
+              <Alert />
+              <Header />
+              {children}
+              <Footer />
+            </SidebarProvider>
           </AlertProvider>
         </StoreProvider>
       </body>
