@@ -2,7 +2,6 @@
 //
 // RTK Query endpoints for tour data (client-side use only).
 // For server-side data fetching from Server Components, use
-// apiFetchServer() from lib/api.js instead.
 //
 // Endpoints:
 //   GET /api/v1/tours                   → list of all tours

@@ -42,7 +42,6 @@ export default function MyReviews() {
             <p className="text-grey-500">
               Couldn&apos;t load your reviews ({error?.data?.message ?? error?.status ?? 'Unknown error'}). Check{' '}
               <code className="text-sm">ENDPOINTS.myReviews</code> in{' '}
-              <code className="text-sm">lib/api.js</code>.
             </p>
           ) : reviews.length === 0 ? (
             <p className="text-grey-500">You haven&apos;t reviewed any tours yet.</p>

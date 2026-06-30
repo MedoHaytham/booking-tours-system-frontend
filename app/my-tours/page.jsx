@@ -48,7 +48,6 @@ export default function MyToursPage() {
             <p className="text-grey-500">
               Couldn&apos;t load your bookings ({error}). Check{' '}
               <code className="text-sm">ENDPOINTS.myTours</code> in{' '}
-              <code className="text-sm">lib/api.js</code>.
             </p>
           ) : tours.length === 0 ? (
             <p className="text-grey-500">You haven&apos;t booked any tours yet.</p>
