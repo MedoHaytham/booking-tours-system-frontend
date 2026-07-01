@@ -10,7 +10,6 @@ import {
   MessageSquare,
   Award,
   AlertTriangle,
-  X,
   Calendar
 } from 'lucide-react';
 

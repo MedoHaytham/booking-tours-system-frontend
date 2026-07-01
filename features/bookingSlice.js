@@ -23,8 +23,49 @@ const bookingApiSlice = apiSlice.injectEndpoints({
       query: () => "/bookings/my-tours",
       providesTags: ["Booking"],
     }),
+
+    // ── Admin: Get all bookings ───────────────────────────────────────────
+    getAllBookings: builder.query({
+      query: (params) => ({
+        url: "/bookings",
+        params,
+      }),
+      providesTags: ["Booking"],
+    }),
+
+    // ── Admin: Get bookings stats ─────────────────────────────────────────
+    getBookingsStats: builder.query({
+      query: () => "/bookings/booking-stats",
+      providesTags: ["Booking"],
+    }),
+
+    // ── Admin: Update booking ─────────────────────────────────────────────
+    updateBooking: builder.mutation({
+      query: ({ id, body }) => ({
+        url: `/bookings/${id}`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Booking"],
+    }),
+
+    // ── Admin: Delete booking ─────────────────────────────────────────────
+    deleteBooking: builder.mutation({
+      query: (id) => ({
+        url: `/bookings/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Booking"],
+    }),
   }),
 });
 
-export const { useGetCheckoutSessionQuery, useLazyGetCheckoutSessionQuery, useGetMyToursQuery } =
-  bookingApiSlice;
+export const {
+  useGetCheckoutSessionQuery,
+  useLazyGetCheckoutSessionQuery,
+  useGetMyToursQuery,
+  useGetAllBookingsQuery,
+  useGetBookingsStatsQuery,
+  useUpdateBookingMutation,
+  useDeleteBookingMutation,
+} = bookingApiSlice;
