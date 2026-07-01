@@ -574,7 +574,7 @@ export default function ManageBookingsPage() {
                       onChange={() => setEditPaid(false)}
                       className="accent-rose-500 cursor-pointer"
                     />
-                    <span className="text-sm font-semibold text-grey-700 text-rose-600">Unpaid</span>
+                    <span className="text-sm font-semibold text-grey-700">Unpaid</span>
                   </label>
                 </div>
               </div>
