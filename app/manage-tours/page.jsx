@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+
 import {
   Search,
   Edit,
@@ -13,8 +15,6 @@ import {
   DollarSign,
   Users,
   Clock,
-  ChevronUp,
-  ChevronDown,
   AlertCircle,
   BarChart2,
   CheckCircle2,
@@ -22,7 +22,6 @@ import {
   Plus,
   ImagePlus,
   Upload,
-  MapPin,
 } from 'lucide-react';
 
 import LoadingScreen from '@/components/LoadingScreen';
@@ -32,7 +31,9 @@ import StartDatesManager from '@/components/StartDatesManager';
 import GuidesSelector from '@/components/GuidesSelector';
 import WaypointsManager from '@/components/WaypointsManager';
 import StartLocationForm from '@/components/StartLocationForm';
-import { useAuthGuard } from '@/hooks/useAuthGuard';
+import ImageUploadField from '@/components/ImageUploadField';
+import SortIcon from '@/components/SortIcon';
+
 import {
   useGetAdminToursQuery,
   useCreateTourMutation,
@@ -42,8 +43,9 @@ import {
   useGetTourStatsQuery,
 } from '@/features/tourSlice';
 import { useGetAllUsersQuery } from '@/features/userSlice';
+
+import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { useAlert } from '@/context/AlertContext';
-import Link from 'next/link';
 
 const DIFFICULTY_STYLES = {
   easy: 'bg-emerald-50 text-emerald-700 border-emerald-200',
@@ -51,57 +53,6 @@ const DIFFICULTY_STYLES = {
   difficult: 'bg-rose-50 text-rose-700 border-rose-200',
 };
 
-function SortIcon({ field, activeSort }) {
-  const isDesc = activeSort === `-${field}`;
-  const isAsc = activeSort === field;
-  if (isDesc) return <ChevronDown size={14} className="text-primary" />;
-  if (isAsc) return <ChevronUp size={14} className="text-primary" />;
-  return <ChevronDown size={14} className="text-grey-400 opacity-50" />;
-}
-
-// ─── Image Upload Preview Component ──────────────────────────────────────────
-function ImageUploadField({ label, id, accept, multiple, preview, onFile, hint }) {
-  const inputRef = useRef(null);
-
-  return (
-    <div>
-      <label className="block text-xs font-bold uppercase tracking-wider text-grey-500 mb-1.5">
-        {label}
-        {hint && <span className="ml-1 font-normal normal-case text-grey-400">{hint}</span>}
-      </label>
-      <div
-        onClick={() => inputRef.current?.click()}
-        className="relative w-full min-h-[90px] border-2 border-dashed border-grey-200 rounded-xl bg-grey-50 hover:bg-grey-100 hover:border-primary/50 transition-colors cursor-pointer flex items-center justify-center gap-3 overflow-hidden"
-      >
-        {preview?.length ? (
-          <div className="flex flex-wrap gap-2 p-3 justify-center">
-            {preview.map((src, i) => (
-              <div key={i} className="relative w-20 h-14 rounded-lg overflow-hidden border border-grey-200 shrink-0">
-                <Image src={src} alt={`preview-${i}`} fill sizes="80px" className="object-cover" />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center gap-1.5 text-grey-400 py-3">
-            <ImagePlus size={24} />
-            <span className="text-xs font-medium">Click to upload</span>
-          </div>
-        )}
-        <input
-          ref={inputRef}
-          id={id}
-          type="file"
-          accept={accept || 'image/*'}
-          multiple={!!multiple}
-          className="hidden"
-          onChange={onFile}
-        />
-      </div>
-    </div>
-  );
-}
-
-// ─── Main Page ────────────────────────────────────────────────────────────────
 export default function ManageToursPage() {
   const { user, isReady } = useAuthGuard();
   const router = useRouter();
