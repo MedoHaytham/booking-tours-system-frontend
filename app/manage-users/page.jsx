@@ -16,6 +16,7 @@ import {
 
 import LoadingScreen from '@/components/LoadingScreen';
 import SideNav from '@/components/SideNav';
+import StatCard from '@/components/StatCard';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import {
   useGetAllUsersQuery,
@@ -131,45 +132,41 @@ export default function ManageUsersPage() {
 
             {/* Quick Statistics */}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
-              <div className="bg-grey-100 p-6 rounded-xl border border-grey-200 flex items-center gap-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                  <Users size={24} />
-                </div>
-                <div>
-                  <p className="text-xs text-grey-500 font-bold uppercase tracking-wider">Total Users</p>
-                  <h3 className="text-2xl font-bold text-grey-700">{isStatsLoading ? '...' : stats.total}</h3>
-                </div>
-              </div>
+              <StatCard
+                icon={<Users size={24} />}
+                iconBg="bg-primary/10"
+                iconColor="text-primary"
+                label="Total Users"
+                value={stats.total}
+                isLoading={isStatsLoading}
+              />
 
-              <div className="bg-grey-100 p-6 rounded-xl border border-grey-200 flex items-center gap-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
-                  <Shield size={24} />
-                </div>
-                <div>
-                  <p className="text-xs text-grey-500 font-bold uppercase tracking-wider">Admins</p>
-                  <h3 className="text-2xl font-bold text-grey-700">{isStatsLoading ? '...' : stats.admins}</h3>
-                </div>
-              </div>
+              <StatCard
+                icon={<Shield size={24} />}
+                iconBg="bg-purple-100"
+                iconColor="text-purple-600"
+                label="Admins"
+                value={stats.admins}
+                isLoading={isStatsLoading}
+              />
 
-              <div className="bg-grey-100 p-6 rounded-xl border border-grey-200 flex items-center gap-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center text-teal-600">
-                  <UserCheck size={24} />
-                </div>
-                <div>
-                  <p className="text-xs text-grey-500 font-bold uppercase tracking-wider">Guides</p>
-                  <h3 className="text-2xl font-bold text-grey-700">{isStatsLoading ? '...' : stats.guides}</h3>
-                </div>
-              </div>
+              <StatCard
+                icon={<UserCheck size={24} />}
+                iconBg="bg-teal-100"
+                iconColor="text-teal-600"
+                label="Guides"
+                value={stats.guides}
+                isLoading={isStatsLoading}
+              />
 
-              <div className="bg-grey-100 p-6 rounded-xl border border-grey-200 flex items-center gap-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center text-slate-600">
-                  <Users size={24} />
-                </div>
-                <div>
-                  <p className="text-xs text-grey-500 font-bold uppercase tracking-wider">Customers</p>
-                  <h3 className="text-2xl font-bold text-grey-700">{isStatsLoading ? '...' : stats.regular}</h3>
-                </div>
-              </div>
+              <StatCard
+                icon={<Users size={24} />}
+                iconBg="bg-slate-200"
+                iconColor="text-slate-600"
+                label="Customers"
+                value={stats.regular}
+                isLoading={isStatsLoading}
+              />
             </div>
 
             {/* Filters Bar */}

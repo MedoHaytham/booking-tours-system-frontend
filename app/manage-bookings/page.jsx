@@ -19,6 +19,7 @@ import {
 
 import LoadingScreen from '@/components/LoadingScreen';
 import SideNav from '@/components/SideNav';
+import StatCard from '@/components/StatCard';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import {
   useGetAllBookingsQuery,
@@ -165,57 +166,41 @@ export default function ManageBookingsPage() {
 
             {/* Premium Stats Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
-              {/* Total Bookings */}
-              <div className="bg-grey-100 p-6 rounded-xl border border-grey-200 flex items-center gap-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                  <ShoppingBag size={24} />
-                </div>
-                <div>
-                  <p className="text-xs text-grey-500 font-bold uppercase tracking-wider">Total Bookings</p>
-                  <h3 className="text-2xl font-bold text-grey-700">
-                    {isStatsLoading ? '...' : stats.totalBookings}
-                  </h3>
-                </div>
-              </div>
+              <StatCard
+                icon={<ShoppingBag size={24} />}
+                iconBg="bg-primary/10"
+                iconColor="text-primary"
+                label="Total Bookings"
+                value={stats.totalBookings}
+                isLoading={isStatsLoading}
+              />
 
-              {/* Total Revenue */}
-              <div className="bg-grey-100 p-6 rounded-xl border border-grey-200 flex items-center gap-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-                  <TrendingUp size={24} />
-                </div>
-                <div>
-                  <p className="text-xs text-grey-500 font-bold uppercase tracking-wider">Total Revenue</p>
-                  <h3 className="text-2xl font-bold text-grey-700">
-                    {isStatsLoading ? '...' : formatPrice(stats.totalRevenue)}
-                  </h3>
-                </div>
-              </div>
+              <StatCard
+                icon={<TrendingUp size={24} />}
+                iconBg="bg-emerald-100"
+                iconColor="text-emerald-600"
+                label="Total Revenue"
+                value={formatPrice(stats.totalRevenue)}
+                isLoading={isStatsLoading}
+              />
 
-              {/* Paid Bookings */}
-              <div className="bg-grey-100 p-6 rounded-xl border border-grey-200 flex items-center gap-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                  <CheckCircle2 size={24} />
-                </div>
-                <div>
-                  <p className="text-xs text-grey-500 font-bold uppercase tracking-wider">Paid Bookings</p>
-                  <h3 className="text-2xl font-bold text-grey-700">
-                    {isStatsLoading ? '...' : stats.paidBookings}
-                  </h3>
-                </div>
-              </div>
+              <StatCard
+                icon={<CheckCircle2 size={24} />}
+                iconBg="bg-green-100"
+                iconColor="text-green-600"
+                label="Paid Bookings"
+                value={stats.paidBookings}
+                isLoading={isStatsLoading}
+              />
 
-              {/* Unpaid Bookings */}
-              <div className="bg-grey-100 p-6 rounded-xl border border-grey-200 flex items-center gap-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center text-rose-600">
-                  <XCircle size={24} />
-                </div>
-                <div>
-                  <p className="text-xs text-grey-500 font-bold uppercase tracking-wider">Unpaid Bookings</p>
-                  <h3 className="text-2xl font-bold text-grey-700">
-                    {isStatsLoading ? '...' : stats.unpaidBookings}
-                  </h3>
-                </div>
-              </div>
+              <StatCard
+                icon={<XCircle size={24} />}
+                iconBg="bg-rose-100"
+                iconColor="text-rose-600"
+                label="Unpaid Bookings"
+                value={stats.unpaidBookings}
+                isLoading={isStatsLoading}
+              />
             </div>
 
             {/* Filter and Search Bar */}

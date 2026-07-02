@@ -55,9 +55,9 @@ export default function TourPage({ params }) {
 
   if (!tour) {
     return (
-      <main className="bg-grey-100 min-h-[60vh] px-6 py-20 flex items-center justify-center">
+      <main className="bg-grey-100 min-h-[77vh] px-6 py-20 flex items-center justify-center">
         <p className="text-grey-500 text-center max-w-md">
-          Couldn&apos;t load this tour{fetchError ? ` (${fetchError})` : ''}. The tour may not exist or the API may be unavailable.
+          Couldn&apos;t load this tour{fetchError ? ` (${fetchError})` : ''}. The tour may not exist.
         </p>
       </main>
     );

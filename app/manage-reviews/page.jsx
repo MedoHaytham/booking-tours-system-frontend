@@ -16,6 +16,7 @@ import {
 import LoadingScreen from '@/components/LoadingScreen';
 import SideNav from '@/components/SideNav';
 import StarRating from '@/components/StarRating';
+import StatCard from '@/components/StatCard';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import {
   useGetAllReviewsQuery,
@@ -131,51 +132,41 @@ export default function ManageReviewsPage() {
 
             {/* Quick Statistics */}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
-              {/* Total Reviews */}
-              <div className="bg-grey-100 p-6 rounded-xl border border-grey-200 flex items-center gap-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                  <MessageSquare size={24} />
-                </div>
-                <div>
-                  <p className="text-xs text-grey-500 font-bold uppercase tracking-wider">Total Reviews</p>
-                  <h3 className="text-2xl font-bold text-grey-700">{isStatsLoading ? '...' : stats.total}</h3>
-                </div>
-              </div>
+              <StatCard
+                icon={<MessageSquare size={24} />}
+                iconBg="bg-primary/10"
+                iconColor="text-primary"
+                label="Total Reviews"
+                value={stats.total}
+                isLoading={isStatsLoading}
+              />
 
-              {/* Average Rating */}
-              <div className="bg-grey-100 p-6 rounded-xl border border-grey-200 flex items-center gap-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-500">
-                  <Star size={24} className="fill-amber-500" />
-                </div>
-                <div>
-                  <p className="text-xs text-grey-500 font-bold uppercase tracking-wider">Avg Rating</p>
-                  <h3 className="text-2xl font-bold text-grey-700">
-                    {isStatsLoading ? '...' : (stats.avgRating ? stats.avgRating.toFixed(2) : '0.00')}
-                  </h3>
-                </div>
-              </div>
+              <StatCard
+                icon={<Star size={24} className="fill-amber-500" />}
+                iconBg="bg-amber-100"
+                iconColor="text-amber-500"
+                label="Avg Rating"
+                value={stats.avgRating ? stats.avgRating.toFixed(2) : '0.00'}
+                isLoading={isStatsLoading}
+              />
 
-              {/* 5-Star Ratings */}
-              <div className="bg-grey-100 p-6 rounded-xl border border-grey-200 flex items-center gap-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-                  <Award size={24} />
-                </div>
-                <div>
-                  <p className="text-xs text-grey-500 font-bold uppercase tracking-wider">5-Star Ratings</p>
-                  <h3 className="text-2xl font-bold text-grey-700">{isStatsLoading ? '...' : stats.fiveStars}</h3>
-                </div>
-              </div>
+              <StatCard
+                icon={<Award size={24} />}
+                iconBg="bg-emerald-100"
+                iconColor="text-emerald-600"
+                label="5-Star Ratings"
+                value={stats.fiveStars}
+                isLoading={isStatsLoading}
+              />
 
-              {/* Low Ratings (< 3 Stars) */}
-              <div className="bg-grey-100 p-6 rounded-xl border border-grey-200 flex items-center gap-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center text-rose-600">
-                  <AlertTriangle size={24} />
-                </div>
-                <div>
-                  <p className="text-xs text-grey-500 font-bold uppercase tracking-wider">Low Ratings (1-2★)</p>
-                  <h3 className="text-2xl font-bold text-grey-700">{isStatsLoading ? '...' : lowRatingsCount}</h3>
-                </div>
-              </div>
+              <StatCard
+                icon={<AlertTriangle size={24} />}
+                iconBg="bg-rose-100"
+                iconColor="text-rose-600"
+                label="Low Ratings (1-2★)"
+                value={lowRatingsCount}
+                isLoading={isStatsLoading}
+              />
             </div>
 
             {/* Filters Bar */}
