@@ -28,6 +28,10 @@ import {
 import LoadingScreen from '@/components/LoadingScreen';
 import SideNav from '@/components/SideNav';
 import StatCard from '@/components/StatCard';
+import StartDatesManager from '@/components/StartDatesManager';
+import GuidesSelector from '@/components/GuidesSelector';
+import WaypointsManager from '@/components/WaypointsManager';
+import StartLocationForm from '@/components/StartLocationForm';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import {
   useGetAdminToursQuery,
@@ -159,7 +163,7 @@ export default function ManageToursPage() {
 
   // Mutations
   const [createTour, { isLoading: isCreating }] = useCreateTourMutation();
-  const [createTourStartDate, { isLoading: isAddingDate }] = useCreateTourStartDateMutation();
+  const [createTourStartDate] = useCreateTourStartDateMutation();
   const [deleteTour, { isLoading: isDeleting }] = useDeleteTourMutation();
   const [updateTour, { isLoading: isUpdating }] = useUpdateTourMutation();
 
@@ -187,12 +191,7 @@ export default function ManageToursPage() {
   const [createImageFiles, setCreateImageFiles] = useState([]);
   const [createImagesPreview, setCreateImagesPreview] = useState([]);
 
-  const [newCreateLocation, setNewCreateLocation] = useState({
-    day: 1, address: '', description: '', lat: '', lng: ''
-  });
-  const [newEditLocation, setNewEditLocation] = useState({
-    day: 1, address: '', description: '', lat: '', lng: ''
-  });
+
 
   // ── Helpers ─────────────────────────────────────────────────────────────────
   const formatPrice = (value) =>
@@ -1018,324 +1017,30 @@ export default function ManageToursPage() {
               </div>
 
               {/* Start Dates Section */}
-              <div className="pt-2 border-t border-grey-100">
-                <label className="block text-xs font-bold uppercase tracking-wider text-grey-500 mb-1.5">
-                  Start Dates * <span className="font-normal normal-case text-grey-400">(between 1 and 3 dates)</span>
-                </label>
-                
-                {/* List of currently added start dates */}
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {createForm.startDates?.map((d, index) => (
-                    <div key={index} className="flex items-center gap-1.5 bg-primary/5 border border-primary/20 text-primary px-3 py-1.5 rounded-full text-xs font-semibold">
-                      <span>{new Date(d.startDate).toLocaleDateString()}</span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const updated = createForm.startDates.filter((_, i) => i !== index);
-                          setCreateForm(prev => ({ ...prev, startDates: updated }));
-                        }}
-                        className="hover:text-primary-dark transition-colors cursor-pointer"
-                      >
-                        <X size={12} />
-                      </button>
-                    </div>
-                  ))}
-                  {(!createForm.startDates || createForm.startDates.length === 0) && (
-                    <span className="text-xs text-grey-400 italic">No start dates added yet. At least 1 is required.</span>
-                  )}
-                </div>
-
-                {/* Add new date input */}
-                {(!createForm.startDates || createForm.startDates.length < 3) && (
-                  <div className="flex gap-2">
-                    <input
-                      type="date"
-                      id="new-create-start-date"
-                      min={new Date().toISOString().split('T')[0]}
-                      className="flex-1 px-4 py-2 rounded-xl bg-grey-100 border border-grey-200 text-sm text-grey-700 focus:outline-none focus:border-primary font-medium"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const input = document.getElementById('new-create-start-date');
-                        const val = input?.value;
-                        if (!val) return;
-                        const exists = createForm.startDates?.some(d => d.startDate === val);
-                        if (exists) {
-                          showAlert('error', 'This date is already added.');
-                          return;
-                        }
-                        const updated = [...(createForm.startDates || []), { startDate: val }];
-                        setCreateForm(prev => ({ ...prev, startDates: updated }));
-                        if (input) input.value = '';
-                      }}
-                      className="px-4 py-2 bg-grey-200 hover:bg-grey-300 text-grey-700 text-xs font-bold rounded-xl transition-colors cursor-pointer"
-                    >
-                      Add Date
-                    </button>
-                  </div>
-                )}
-              </div>
+              <StartDatesManager
+                dates={createForm.startDates}
+                onChange={(dates) => setCreateForm(p => ({ ...p, startDates: dates }))}
+                tourId={undefined}
+              />
 
               {/* Tour Guides Section */}
-              <div className="pt-2 border-t border-grey-100 space-y-3">
-                <label className="block text-xs font-bold uppercase tracking-wider text-grey-500 items-center gap-1">
-                  <Users size={14} className="text-primary" /> Tour Guides
-                </label>
-                
-                {/* List of currently selected guides */}
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {createForm.guides?.map((guideId) => {
-                    const guideObj = guidesList.find(g => g._id === guideId);
-                    if (!guideObj) return null;
-                    return (
-                      <div key={guideId} className="flex items-center gap-1.5 bg-primary/5 border border-primary/20 text-primary px-3 py-1.5 rounded-full text-xs font-semibold">
-                        <span>{guideObj.name} ({guideObj.role})</span>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const updated = createForm.guides.filter(id => id !== guideId);
-                            setCreateForm(prev => ({ ...prev, guides: updated }));
-                          }}
-                          className="hover:text-primary-dark transition-colors cursor-pointer flex items-center justify-center"
-                        >
-                          <X size={12} />
-                        </button>
-                      </div>
-                    );
-                  })}
-                  {(!createForm.guides || createForm.guides.length === 0) && (
-                    <span className="text-xs text-grey-450 italic">No guides assigned to this tour yet.</span>
-                  )}
-                </div>
-
-                {/* Select dropdown to add a guide */}
-                <div className="flex gap-2">
-                  <select
-                    id="new-create-guide"
-                    className="flex-1 px-4 py-2 rounded-xl bg-grey-100 border border-grey-200 text-sm text-grey-700 focus:outline-none focus:border-primary font-medium cursor-pointer"
-                    defaultValue=""
-                  >
-                    <option value="" disabled>Select a guide to add...</option>
-                    {guidesList
-                      .filter(g => !(createForm.guides || []).includes(g._id))
-                      .map(g => (
-                        <option key={g._id} value={g._id}>
-                          {g.name} ({g.role})
-                        </option>
-                      ))}
-                  </select>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const select = document.getElementById('new-create-guide');
-                      const val = select?.value;
-                      if (!val) return;
-                      const updated = [...(createForm.guides || []), val];
-                      setCreateForm(prev => ({ ...prev, guides: updated }));
-                      if (select) select.value = '';
-                    }}
-                    className="px-4 py-2 bg-grey-200 hover:bg-grey-300 text-grey-700 text-xs font-bold rounded-xl transition-colors cursor-pointer"
-                  >
-                    Add Guide
-                  </button>
-                </div>
-              </div>
+              <GuidesSelector
+                selected={createForm.guides}
+                guidesList={guidesList}
+                onChange={(guides) => setCreateForm(p => ({ ...p, guides }))}
+              />
 
               {/* Start Location Section */}
-              <div className="pt-2 border-t border-grey-100 space-y-3">
-                <label className="block text-xs font-bold uppercase tracking-wider text-grey-500 items-center gap-1">
-                  <MapPin size={14} className="text-primary" /> Start Location
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[10px] font-bold text-grey-450 uppercase mb-1">Address</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Biscayne Bay"
-                      value={createForm.startLocation?.address || ''}
-                      onChange={(e) => setCreateForm(prev => ({
-                        ...prev,
-                        startLocation: { ...(prev.startLocation || {}), address: e.target.value }
-                      }))}
-                      className="w-full px-3 py-2 rounded-xl bg-grey-100 border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-bold text-grey-450 uppercase mb-1">Description</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Miami, USA"
-                      value={createForm.startLocation?.description || ''}
-                      onChange={(e) => setCreateForm(prev => ({
-                        ...prev,
-                        startLocation: { ...(prev.startLocation || {}), description: e.target.value }
-                      }))}
-                      className="w-full px-3 py-2 rounded-xl bg-grey-100 border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[10px] font-bold text-grey-450 uppercase mb-1">Latitude</label>
-                    <input
-                      type="number"
-                      step="any"
-                      placeholder="e.g. 25.79"
-                      value={createForm.startLocation?.coordinates?.[1] ?? ''}
-                      onChange={(e) => setCreateForm(prev => {
-                        const coords = [...(prev.startLocation?.coordinates || [0, 0])];
-                        coords[1] = e.target.value === '' ? '' : Number(e.target.value);
-                        return {
-                          ...prev,
-                          startLocation: { ...(prev.startLocation || {}), coordinates: coords }
-                        };
-                      })}
-                      className="w-full px-3 py-2 rounded-xl bg-grey-100 border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-bold text-grey-450 uppercase mb-1">Longitude</label>
-                    <input
-                      type="number"
-                      step="any"
-                      placeholder="e.g. -80.13"
-                      value={createForm.startLocation?.coordinates?.[0] ?? ''}
-                      onChange={(e) => setCreateForm(prev => {
-                        const coords = [...(prev.startLocation?.coordinates || [0, 0])];
-                        coords[0] = e.target.value === '' ? '' : Number(e.target.value);
-                        return {
-                          ...prev,
-                          startLocation: { ...(prev.startLocation || {}), coordinates: coords }
-                        };
-                      })}
-                      className="w-full px-3 py-2 rounded-xl bg-grey-100 border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                    />
-                  </div>
-                </div>
-              </div>
+              <StartLocationForm
+                value={createForm.startLocation}
+                onChange={(loc) => setCreateForm(p => ({ ...p, startLocation: loc }))}
+              />
 
               {/* Waypoints Locations Section */}
-              <div className="pt-2 border-t border-grey-100 space-y-3">
-                <label className="block text-xs font-bold uppercase tracking-wider text-grey-500 items-center gap-1">
-                  <Map size={14} className="text-primary" /> Waypoints (Locations)
-                </label>
-
-                {/* List of currently added locations */}
-                <div className="space-y-2">
-                  {createForm.locations?.map((loc, idx) => (
-                    <div key={idx} className="flex justify-between items-center bg-grey-50 border border-grey-200 p-2.5 rounded-xl text-xs">
-                      <div>
-                        <span className="font-bold text-primary mr-1.5">Day {loc.day}:</span>
-                        <span className="font-semibold text-grey-700">{loc.address}</span>
-                        <span className="text-grey-400 ml-1">({loc.description})</span>
-                        <span className="text-[10px] text-grey-400 block mt-0.5">Coordinates: [{loc.coordinates?.[1]}, {loc.coordinates?.[0]}]</span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const updated = createForm.locations.filter((_, i) => i !== idx);
-                          setCreateForm(prev => ({ ...prev, locations: updated }));
-                        }}
-                        className="p-1.5 hover:bg-red-50 text-red-500 rounded-lg transition-colors cursor-pointer"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  ))}
-                  {(!createForm.locations || createForm.locations.length === 0) && (
-                    <span className="text-xs text-grey-450 italic block">No waypoints added yet.</span>
-                  )}
-                </div>
-
-                {/* Inputs to add new location */}
-                <div className="bg-grey-50 border border-grey-200 p-3 rounded-xl space-y-3">
-                  <span className="block text-[11px] font-bold uppercase tracking-wider text-grey-500">Add New Waypoint</span>
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="col-span-1">
-                      <label className="block text-[9px] font-bold text-grey-450 uppercase mb-1">Day</label>
-                      <input
-                        type="number"
-                        min="1"
-                        placeholder="1"
-                        value={newCreateLocation.day}
-                        onChange={(e) => setNewCreateLocation(p => ({ ...p, day: e.target.value }))}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                      />
-                    </div>
-                    <div className="col-span-2">
-                      <label className="block text-[9px] font-bold text-grey-450 uppercase mb-1">Address</label>
-                      <input
-                        type="text"
-                        placeholder="e.g. Biscayne Bay"
-                        value={newCreateLocation.address}
-                        onChange={(e) => setNewCreateLocation(p => ({ ...p, address: e.target.value }))}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="col-span-3">
-                      <label className="block text-[9px] font-bold text-grey-450 uppercase mb-1">Description</label>
-                      <input
-                        type="text"
-                        placeholder="e.g. Miami, USA"
-                        value={newCreateLocation.description}
-                        onChange={(e) => setNewCreateLocation(p => ({ ...p, description: e.target.value }))}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="block text-[9px] font-bold text-grey-450 uppercase mb-1">Latitude</label>
-                      <input
-                        type="number"
-                        step="any"
-                        placeholder="e.g. 24.55"
-                        value={newCreateLocation.lat}
-                        onChange={(e) => setNewCreateLocation(p => ({ ...p, lat: e.target.value }))}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[9px] font-bold text-grey-450 uppercase mb-1">Longitude</label>
-                      <input
-                        type="number"
-                        step="any"
-                        placeholder="e.g. -81.78"
-                        value={newCreateLocation.lng}
-                        onChange={(e) => setNewCreateLocation(p => ({ ...p, lng: e.target.value }))}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                      />
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (!newCreateLocation.address || !newCreateLocation.description) {
-                        showAlert('error', 'Please fill in address and description.');
-                        return;
-                      }
-                      const coords = [Number(newCreateLocation.lng || 0), Number(newCreateLocation.lat || 0)];
-                      const updated = [
-                        ...(createForm.locations || []),
-                        {
-                          day: Number(newCreateLocation.day || 1),
-                          address: newCreateLocation.address,
-                          description: newCreateLocation.description,
-                          coordinates: coords
-                        }
-                      ];
-                      setCreateForm(prev => ({ ...prev, locations: updated }));
-                      setNewCreateLocation({ day: 1, address: '', description: '', lat: '', lng: '' });
-                    }}
-                    className="w-full py-2 bg-primary/10 hover:bg-primary/20 text-primary text-xs font-bold rounded-lg transition-colors cursor-pointer"
-                  >
-                    Add Waypoint
-                  </button>
-                </div>
-              </div>
+              <WaypointsManager
+                locations={createForm.locations}
+                onChange={(locs) => setCreateForm(p => ({ ...p, locations: locs }))}
+              />
 
               {/* Cover Image */}
               <ImageUploadField
@@ -1524,383 +1229,30 @@ export default function ManageToursPage() {
               </div>
 
               {/* Start Dates Section */}
-              <div className="pt-2 border-t border-grey-100">
-                <label className="block text-xs font-bold uppercase tracking-wider text-grey-500 mb-1.5">
-                  Start Dates * <span className="font-normal normal-case text-grey-400">(between 1 and 3 dates)</span>
-                </label>
-
-                <div className="space-y-3">
-                  {editForm.startDates?.map((d, index) => {
-                    const dateVal = d.startDate ? new Date(d.startDate).toISOString().split('T')[0] : '';
-                    const isPassed = d.startDate ? new Date(d.startDate) < new Date() : false;
-                    const isSoldOut = !!d.soldOut;
-                    const isStruck = isPassed || isSoldOut;
-                    return (
-                      <div key={index} className={`flex gap-2 items-center rounded-xl px-2 py-1 transition-colors ${
-                        isStruck ? 'bg-grey-50 border border-grey-200' : ''
-                      }`}>
-                        <div className="flex-1 relative">
-                          <input
-                            type="date"
-                            value={dateVal}
-                            readOnly={isPassed}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              if (!val || isPassed) return;
-                              const updated = [...editForm.startDates];
-                              updated[index] = { ...updated[index], startDate: val };
-                              setEditForm(prev => ({ ...prev, startDates: updated }));
-                            }}
-                            className={`w-full px-4 py-2 rounded-xl border text-sm font-medium focus:outline-none focus:border-primary ${
-                              isStruck
-                                ? 'bg-grey-100 border-grey-200 text-grey-400 line-through'
-                                : 'bg-grey-100 border-grey-200 text-grey-700'
-                            }`}
-                          />
-                          {isSoldOut && !isPassed && (
-                            <span className="absolute right-10 top-1/2 -translate-y-1/2 text-[10px] font-bold text-rose-500 bg-rose-50 border border-rose-200 rounded-full px-2 py-0.5">
-                              Sold Out
-                            </span>
-                          )}
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (editForm.startDates.length <= 1) {
-                              showAlert('error', 'A tour must have at least one start date.');
-                              return;
-                            }
-                            const updated = editForm.startDates.filter((_, i) => i !== index);
-                            setEditForm(prev => ({ ...prev, startDates: updated }));
-                          }}
-                          className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
-                          title="Remove Date"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    );
-                  })}
-                  
-                  {(() => {
-                    const now = new Date();
-                    // Only count future dates that are NOT sold out
-                    const activeCount = (editForm.startDates || []).filter(d =>
-                      d.startDate && new Date(d.startDate) >= now && !d.soldOut
-                    ).length;
-                    return activeCount < 3;
-                  })() && (
-                    <div className="flex gap-2 pt-1">
-                      <input
-                        type="date"
-                        id="new-edit-start-date"
-                        className="flex-1 px-4 py-2 rounded-xl bg-grey-100 border border-grey-200 text-sm text-grey-700 focus:outline-none focus:border-primary font-medium"
-                      />
-                      <button
-                        type="button"
-                        disabled={isAddingDate}
-                        onClick={async () => {
-                          const input = document.getElementById('new-edit-start-date');
-                          const val = input?.value;
-                          if (!val) return;
-                          const now = new Date();
-                          // Only block if duplicate among active (future + not sold out) dates
-                          // Passed / sold-out dates with the same value are fine — backend will replace them
-                          const exists = editForm.startDates?.some(d => {
-                            const existingDateStr = d.startDate ? new Date(d.startDate).toISOString().split('T')[0] : '';
-                            const isFuture = d.startDate && new Date(d.startDate) >= now;
-                            const isActive = isFuture && !d.soldOut;
-                            return isActive && existingDateStr === val;
-                          });
-                          if (exists) {
-                            showAlert('error', 'This date is already added.');
-                            return;
-                          }
-                          try {
-                            const res = await createTourStartDate({
-                              id: editingTour._id,
-                              body: { startDate: val, soldOut: false },
-                            }).unwrap();
-                            // Backend returns the full updated tour; grab the newly added date (last in array)
-                            const updatedTour = res?.data?.tour;
-                            const newDate = updatedTour?.startDates?.[updatedTour.startDates.length - 1]
-                              || { startDate: val, soldOut: false, participants: 0 };
-                            setEditForm(prev => ({ ...prev, startDates: updatedTour?.startDates ?? [...(prev.startDates || []), newDate] }));
-                            if (input) input.value = '';
-                            showAlert('success', 'Start date added successfully!');
-                          } catch (err) {
-                            showAlert('error', err?.data?.message || 'Failed to add start date.');
-                          }
-                        }}
-                        className="px-4 py-2 bg-grey-200 hover:bg-grey-300 disabled:opacity-60 text-grey-700 text-xs font-bold rounded-xl transition-colors cursor-pointer"
-                      >
-                        {isAddingDate ? 'Adding...' : 'Add Date'}
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
+              <StartDatesManager
+                dates={editForm.startDates}
+                onChange={(dates) => setEditForm(p => ({ ...p, startDates: dates }))}
+                tourId={editingTour?._id}
+              />
 
               {/* Tour Guides Section */}
-              <div className="pt-2 border-t border-grey-100 space-y-3">
-                <label className="block text-xs font-bold uppercase tracking-wider text-grey-500 items-center gap-1">
-                  <Users size={14} className="text-primary" /> Tour Guides
-                </label>
-                
-                {/* List of currently selected guides */}
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {editForm.guides?.map((guideId) => {
-                    const guideObj = guidesList.find(g => g._id === guideId);
-                    if (!guideObj) return null;
-                    return (
-                      <div key={guideId} className="flex items-center gap-1.5 bg-primary/5 border border-primary/20 text-primary px-3 py-1.5 rounded-full text-xs font-semibold">
-                        <span>{guideObj.name} ({guideObj.role})</span>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const updated = editForm.guides.filter(id => id !== guideId);
-                            setEditForm(prev => ({ ...prev, guides: updated }));
-                          }}
-                          className="hover:text-primary-dark transition-colors cursor-pointer flex items-center justify-center"
-                        >
-                          <X size={12} />
-                        </button>
-                      </div>
-                    );
-                  })}
-                  {(!editForm.guides || editForm.guides.length === 0) && (
-                    <span className="text-xs text-grey-450 italic">No guides assigned to this tour yet.</span>
-                  )}
-                </div>
-
-                {/* Select dropdown to add a guide */}
-                <div className="flex gap-2">
-                  <select
-                    id="new-edit-guide"
-                    className="flex-1 px-4 py-2 rounded-xl bg-grey-100 border border-grey-200 text-sm text-grey-700 focus:outline-none focus:border-primary font-medium cursor-pointer"
-                    defaultValue=""
-                  >
-                    <option value="" disabled>Select a guide to add...</option>
-                    {guidesList
-                      .filter(g => !(editForm.guides || []).includes(g._id))
-                      .map(g => (
-                        <option key={g._id} value={g._id}>
-                          {g.name} ({g.role})
-                        </option>
-                      ))}
-                  </select>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const select = document.getElementById('new-edit-guide');
-                      const val = select?.value;
-                      if (!val) return;
-                      const updated = [...(editForm.guides || []), val];
-                      setEditForm(prev => ({ ...prev, guides: updated }));
-                      if (select) select.value = '';
-                    }}
-                    className="px-4 py-2 bg-grey-200 hover:bg-grey-300 text-grey-700 text-xs font-bold rounded-xl transition-colors cursor-pointer"
-                  >
-                    Add Guide
-                  </button>
-                </div>
-              </div>
+              <GuidesSelector
+                selected={editForm.guides}
+                guidesList={guidesList}
+                onChange={(guides) => setEditForm(p => ({ ...p, guides }))}
+              />
 
               {/* Start Location Section */}
-              <div className="pt-2 border-t border-grey-100 space-y-3">
-                <label className="block text-xs font-bold uppercase tracking-wider text-grey-500 items-center gap-1">
-                  <MapPin size={14} className="text-primary" /> Start Location
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[10px] font-bold text-grey-450 uppercase mb-1">Address</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Biscayne Bay"
-                      value={editForm.startLocation?.address || ''}
-                      onChange={(e) => setEditForm(prev => ({
-                        ...prev,
-                        startLocation: { ...(prev.startLocation || {}), address: e.target.value }
-                      }))}
-                      className="w-full px-3 py-2 rounded-xl bg-grey-100 border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-bold text-grey-450 uppercase mb-1">Description</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Miami, USA"
-                      value={editForm.startLocation?.description || ''}
-                      onChange={(e) => setEditForm(prev => ({
-                        ...prev,
-                        startLocation: { ...(prev.startLocation || {}), description: e.target.value }
-                      }))}
-                      className="w-full px-3 py-2 rounded-xl bg-grey-100 border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[10px] font-bold text-grey-450 uppercase mb-1">Latitude</label>
-                    <input
-                      type="number"
-                      step="any"
-                      placeholder="e.g. 25.79"
-                      value={editForm.startLocation?.coordinates?.[1] ?? ''}
-                      onChange={(e) => setEditForm(prev => {
-                        const coords = [...(prev.startLocation?.coordinates || [0, 0])];
-                        coords[1] = e.target.value === '' ? '' : Number(e.target.value);
-                        return {
-                          ...prev,
-                          startLocation: { ...(prev.startLocation || {}), coordinates: coords }
-                        };
-                      })}
-                      className="w-full px-3 py-2 rounded-xl bg-grey-100 border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-bold text-grey-450 uppercase mb-1">Longitude</label>
-                    <input
-                      type="number"
-                      step="any"
-                      placeholder="e.g. -80.13"
-                      value={editForm.startLocation?.coordinates?.[0] ?? ''}
-                      onChange={(e) => setEditForm(prev => {
-                        const coords = [...(prev.startLocation?.coordinates || [0, 0])];
-                        coords[0] = e.target.value === '' ? '' : Number(e.target.value);
-                        return {
-                          ...prev,
-                          startLocation: { ...(prev.startLocation || {}), coordinates: coords }
-                        };
-                      })}
-                      className="w-full px-3 py-2 rounded-xl bg-grey-100 border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                    />
-                  </div>
-                </div>
-              </div>
+              <StartLocationForm
+                value={editForm.startLocation}
+                onChange={(loc) => setEditForm(p => ({ ...p, startLocation: loc }))}
+              />
 
               {/* Waypoints Locations Section */}
-              <div className="pt-2 border-t border-grey-100 space-y-3">
-                <label className="text-xs font-bold uppercase tracking-wider text-grey-500 flex items-center gap-1">
-                  <Map size={14} className="text-primary" /> Waypoints (Locations)
-                </label>
-
-                {/* List of currently added locations */}
-                <div className="space-y-2">
-                  {editForm.locations?.map((loc, idx) => (
-                    <div key={idx} className="flex justify-between items-center bg-grey-50 border border-grey-200 p-2.5 rounded-xl text-xs">
-                      <div>
-                        <span className="font-bold text-primary mr-1.5">Day {loc.day}:</span>
-                        <span className="font-semibold text-grey-700">{loc.address}</span>
-                        <span className="text-grey-400 ml-1">({loc.description})</span>
-                        <span className="text-[10px] text-grey-400 block mt-0.5">Coordinates: [{loc.coordinates?.[1]}, {loc.coordinates?.[0]}]</span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const updated = editForm.locations.filter((_, i) => i !== idx);
-                          setEditForm(prev => ({ ...prev, locations: updated }));
-                        }}
-                        className="p-1.5 hover:bg-red-50 text-red-500 rounded-lg transition-colors cursor-pointer"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  ))}
-                  {(!editForm.locations || editForm.locations.length === 0) && (
-                    <span className="text-xs text-grey-450 italic block">No waypoints added yet.</span>
-                  )}
-                </div>
-
-                {/* Inputs to add new location */}
-                <div className="bg-grey-50 border border-grey-200 p-3 rounded-xl space-y-3">
-                  <span className="block text-[11px] font-bold uppercase tracking-wider text-grey-500">Add New Waypoint</span>
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="col-span-1">
-                      <label className="block text-[9px] font-bold text-grey-450 uppercase mb-1">Day</label>
-                      <input
-                        type="number"
-                        min="1"
-                        placeholder="1"
-                        value={newEditLocation.day}
-                        onChange={(e) => setNewEditLocation(p => ({ ...p, day: e.target.value }))}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                      />
-                    </div>
-                    <div className="col-span-2">
-                      <label className="block text-[9px] font-bold text-grey-450 uppercase mb-1">Address</label>
-                      <input
-                        type="text"
-                        placeholder="e.g. Biscayne Bay"
-                        value={newEditLocation.address}
-                        onChange={(e) => setNewEditLocation(p => ({ ...p, address: e.target.value }))}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="col-span-3">
-                      <label className="block text-[9px] font-bold text-grey-450 uppercase mb-1">Description</label>
-                      <input
-                        type="text"
-                        placeholder="e.g. Miami, USA"
-                        value={newEditLocation.description}
-                        onChange={(e) => setNewEditLocation(p => ({ ...p, description: e.target.value }))}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="block text-[9px] font-bold text-grey-450 uppercase mb-1">Latitude</label>
-                      <input
-                        type="number"
-                        step="any"
-                        placeholder="e.g. 24.55"
-                        value={newEditLocation.lat}
-                        onChange={(e) => setNewEditLocation(p => ({ ...p, lat: e.target.value }))}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[9px] font-bold text-grey-450 uppercase mb-1">Longitude</label>
-                      <input
-                        type="number"
-                        step="any"
-                        placeholder="e.g. -81.78"
-                        value={newEditLocation.lng}
-                        onChange={(e) => setNewEditLocation(p => ({ ...p, lng: e.target.value }))}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-grey-200 text-xs text-grey-700 focus:outline-none focus:border-primary font-medium"
-                      />
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (!newEditLocation.address || !newEditLocation.description) {
-                        showAlert('error', 'Please fill in address and description.');
-                        return;
-                      }
-                      const coords = [Number(newEditLocation.lng || 0), Number(newEditLocation.lat || 0)];
-                      const updated = [
-                        ...(editForm.locations || []),
-                        {
-                          day: Number(newEditLocation.day || 1),
-                          address: newEditLocation.address,
-                          description: newEditLocation.description,
-                          coordinates: coords
-                        }
-                      ];
-                      setEditForm(prev => ({ ...prev, locations: updated }));
-                      setNewEditLocation({ day: 1, address: '', description: '', lat: '', lng: '' });
-                    }}
-                    className="w-full py-2 bg-primary/10 hover:bg-primary/20 text-primary text-xs font-bold rounded-lg transition-colors cursor-pointer"
-                  >
-                    Add Waypoint
-                  </button>
-                </div>
-              </div>
+              <WaypointsManager
+                locations={editForm.locations}
+                onChange={(locs) => setEditForm(p => ({ ...p, locations: locs }))}
+              />
 
               {/* ── Image Section ─────────────────────────────────────────── */}
               <div className="pt-2 border-t border-grey-100">
