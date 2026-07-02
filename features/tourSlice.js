@@ -14,12 +14,6 @@ import apiSlice from "../api/apiSlice";
 const tourApiSlice = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
-    // ── Single tour by slug ───────────────────────────────────────────────
-    getTourBySlug: builder.query({
-      query: (slug) => `/tours/slug/${slug}`,
-      providesTags: (result, error, slug) => [{ type: "Tour", id: slug }],
-    }),
-
     // ── All: Get all tours + paginated + searchable list ────────────────────────────────
     getAllTours: builder.query({
       query: (params) => ({
@@ -27,6 +21,12 @@ const tourApiSlice = apiSlice.injectEndpoints({
         params,
       }),
       providesTags: ["Tour"],
+    }),
+    
+    // ── Single tour by slug ───────────────────────────────────────────────
+    getTourBySlug: builder.query({
+      query: (slug) => `/tours/slug/${slug}`,
+      providesTags: (result, error, slug) => [{ type: "Tour", id: slug }],
     }),
 
     // ── Admin: Create tour ────────────────────────────────────────────────
@@ -44,25 +44,6 @@ const tourApiSlice = apiSlice.injectEndpoints({
       query: ({ id, body }) => ({
         url: `/tours/${id}`,
         method: "POST",
-        body,
-      }),
-      invalidatesTags: ["Tour"],
-    }),
-
-    // ── Admin: Delete tour start date ──────────────────────────────────────
-    deleteTourStartDate: builder.mutation({
-      query: ({ id, startDateId }) => ({
-        url: `/tours/${id}/startDates/${startDateId}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: ["Tour"],
-    }),
-
-    // ── Admin: Update tour start date ──────────────────────────────────────
-    updateTourStartDate: builder.mutation({
-      query: ({ id, startDateId, body }) => ({
-        url: `/tours/${id}/startDates/${startDateId}`,
-        method: "PATCH",
         body,
       }),
       invalidatesTags: ["Tour"],

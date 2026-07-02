@@ -363,7 +363,7 @@ export default function ManageToursPage() {
   return (
     <main className="bg-grey-100 min-h-[60vh]">
       <div className="bg-white max-w-[120rem] mx-auto min-h-screen md:min-h-0 rounded-none md:rounded-sm overflow-hidden shadow-userview flex flex-col lg:flex-row">
-        <SideNav active="manage-tours" isAdmin={user.role === 'admin'} />
+        <SideNav active="manage-tours" isAdmin={user.role === 'admin'} isLeadGuide={user.role === 'lead-guide'} />
 
         <div className="flex-1 min-w-0 py-12 px-4 sm:px-8 xl:px-16 animate-move-in-bottom">
           <div className="max-w-[100rem] mx-auto">

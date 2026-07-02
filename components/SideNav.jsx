@@ -55,7 +55,7 @@ function NavItem({ href, label, icon: Icon, isActive, isCollapsed, onClick }) {
   );
 }
 
-export default function SideNav({ active = 'settings', isAdmin = false }) {
+export default function SideNav({ active = 'settings', isAdmin = false, isLeadGuide = false }) {
   // Desktop-only collapse state (icon-only rail)
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -92,9 +92,30 @@ export default function SideNav({ active = 'settings', isAdmin = false }) {
           />
         ))}
       </ul>
+      { isLeadGuide && (
+        <div className="pt-5 border-t border-white/20">
+          {!collapsed ? (
+            <h5 className="px-10 mb-3 text-grey-100/70 text-xs uppercase tracking-wide">
+              Lead Guide
+            </h5>
+          ) : (
+            <div className="border-t border-white/20 my-4 mx-3" />
+          )}
+          <ul className="list-none">
+            <NavItem
+              href="/manage-tours"
+              label="Manage tours"
+              icon={Map}
+              isActive={'manage-tours' === active}
+              isCollapsed={collapsed}
+              onClick={isMobile ? close : undefined}
+            />
+          </ul>
+        </div>
+      )}
 
       {isAdmin && (
-        <div className="mt-10">
+        <div className="pt-5 border-t border-white/20">
           {!collapsed ? (
             <h5 className="px-10 mb-3 text-grey-100/70 text-xs uppercase tracking-wide">
               Admin
@@ -116,7 +137,7 @@ export default function SideNav({ active = 'settings', isAdmin = false }) {
         </div>
       )}
 
-      <div className={`mt-auto pt-5 border-t border-white/20 ${collapsed ? 'px-3' : 'px-10'}`}>
+      <div className={`pt-5 border-t border-white/20 ${collapsed ? 'px-3' : 'px-10'}`}>
         <button
           onClick={handleLogout}
           className={`flex items-center gap-4 w-full text-white hover:text-white/70 text-sm uppercase tracking-wide group transition-all cursor-pointer ${

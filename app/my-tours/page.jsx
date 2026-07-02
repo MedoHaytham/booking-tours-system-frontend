@@ -18,7 +18,7 @@ export default function MyToursPage() {
   return (
     <main className="bg-grey-100 min-h-[60vh]">
       <div className="bg-white max-w-[120rem] mx-auto min-h-screen md:min-h-0 rounded-none md:rounded-sm overflow-hidden shadow-userview flex flex-col lg:flex-row">
-        <SideNav active="bookings" isAdmin={user.role === 'admin'} />
+        <SideNav active="bookings" isAdmin={user.role === 'admin'} isLeadGuide={user.role === 'lead-guide'} />
 
         <div className="flex-1 py-12 md:py-20 px-6 md:px-12">
           <h2 className="text-2xl uppercase font-bold bg-gradient-primary-text bg-clip-text text-transparent tracking-wide mb-10">
