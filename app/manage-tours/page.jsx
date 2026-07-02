@@ -1389,7 +1389,7 @@ export default function ManageToursPage() {
           Edit Tour Modal
       ══════════════════════════════════════════════════════════════════════ */}
       {editingTour && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden animate-move-in-bottom border border-grey-200">
             <div className="px-6 py-5 border-b border-grey-200 flex items-center justify-between bg-grey-50">
               <h3 className="font-bold text-lg text-grey-700">Edit Tour Details</h3>
