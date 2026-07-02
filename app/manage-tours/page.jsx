@@ -37,7 +37,6 @@ import SortIcon from '@/components/SortIcon';
 import {
   useGetAdminToursQuery,
   useCreateTourMutation,
-  useCreateTourStartDateMutation,
   useDeleteTourMutation,
   useUpdateTourMutation,
   useGetTourStatsQuery,
@@ -114,7 +113,6 @@ export default function ManageToursPage() {
 
   // Mutations
   const [createTour, { isLoading: isCreating }] = useCreateTourMutation();
-  const [createTourStartDate] = useCreateTourStartDateMutation();
   const [deleteTour, { isLoading: isDeleting }] = useDeleteTourMutation();
   const [updateTour, { isLoading: isUpdating }] = useUpdateTourMutation();
 
@@ -141,8 +139,6 @@ export default function ManageToursPage() {
   const [createCoverPreview, setCreateCoverPreview] = useState([]);
   const [createImageFiles, setCreateImageFiles] = useState([]);
   const [createImagesPreview, setCreateImagesPreview] = useState([]);
-
-
 
   // ── Helpers ─────────────────────────────────────────────────────────────────
   const formatPrice = (value) =>
