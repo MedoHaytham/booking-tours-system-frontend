@@ -3,6 +3,7 @@
 import { use } from 'react';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { Clock, MapPin, Calendar, TrendingUp, User, Star } from 'lucide-react';
 
 import ReviewCard from '@/components/ReviewCard';
@@ -273,11 +274,20 @@ export default function TourPage({ params }) {
               </p>
             </div>
             <div className="w-full max-w-[370px] justify-self-center sm:justify-self-start lg:justify-self-end">
-              {[...tour.startDates]
-                .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
-                .map((date) => (
-                  <BookTourButton key={date._id || date.id} tourId={tour._id || tour.id} date={date}/>
-                ))}
+              {!user ? (
+                <Link
+                  href="/login"
+                  className="inline-block text-center w-full sm:w-[370px] bg-primary text-white uppercase text-sm sm:text-base rounded-full px-4 sm:px-10 py-4 transition-transform hover:-translate-y-0.5"
+                >
+                  Log in to book tour
+                </Link>
+              ) : (
+                [...tour.startDates]
+                  .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
+                  .map((date) => (
+                    <BookTourButton key={date._id || date.id} tourId={tour._id || tour.id} date={date}/>
+                  ))
+              )}
             </div>
           </div>
         </div>
