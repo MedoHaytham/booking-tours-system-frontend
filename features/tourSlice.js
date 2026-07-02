@@ -14,26 +14,14 @@ import apiSlice from "../api/apiSlice";
 const tourApiSlice = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
-    // ── All tours (public) ────────────────────────────────────────────────
-    getAllTours: builder.query({
-      query: () => "/tours",
-      providesTags: (result) =>
-        result?.data?.data
-          ? [
-              ...result.data.data.map(({ _id }) => ({ type: "Tour", id: _id })),
-              { type: "Tour", id: "LIST" },
-            ]
-          : [{ type: "Tour", id: "LIST" }],
-    }),
-
     // ── Single tour by slug ───────────────────────────────────────────────
     getTourBySlug: builder.query({
       query: (slug) => `/tours/slug/${slug}`,
       providesTags: (result, error, slug) => [{ type: "Tour", id: slug }],
     }),
 
-    // ── Admin: paginated + searchable list ────────────────────────────────
-    getAdminTours: builder.query({
+    // ── All: Get all tours + paginated + searchable list ────────────────────────────────
+    getAllTours: builder.query({
       query: (params) => ({
         url: "/tours",
         params,
@@ -107,9 +95,8 @@ const tourApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-  useGetAllToursQuery,
   useGetTourBySlugQuery,
-  useGetAdminToursQuery,
+  useGetAllToursQuery,
   useCreateTourMutation,
   useCreateTourStartDateMutation,
   useDeleteTourMutation,

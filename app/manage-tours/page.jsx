@@ -35,7 +35,7 @@ import ImageUploadField from '@/components/ImageUploadField';
 import SortIcon from '@/components/SortIcon';
 
 import {
-  useGetAdminToursQuery,
+  useGetAllToursQuery,
   useCreateTourMutation,
   useDeleteTourMutation,
   useUpdateTourMutation,
@@ -75,7 +75,7 @@ export default function ManageToursPage() {
   });
 
   // Fetch paginated tours from backend
-  const { data: responseData, isLoading, error } = useGetAdminToursQuery(
+  const { data: responseData, isLoading, error } = useGetAllToursQuery(
     {
       page: queryParams.page,
       limit: queryParams.limit,
