@@ -22,7 +22,7 @@ const tourApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Tour"],
     }),
-    
+
     // ── Single tour by slug ───────────────────────────────────────────────
     getTourBySlug: builder.query({
       query: (slug) => `/tours/slug/${slug}`,

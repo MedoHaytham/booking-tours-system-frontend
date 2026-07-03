@@ -17,6 +17,7 @@ import {
 import LoadingScreen from '@/components/LoadingScreen';
 import SideNav from '@/components/SideNav';
 import StatCard from '@/components/StatCard';
+import PaginationControls from '@/components/PaginationControls';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import {
   useGetAllUsersQuery,
@@ -299,82 +300,14 @@ export default function ManageUsersPage() {
                 </div>
 
                 {/* Pagination Controls — Sticky outside the scrollable table */}
-                {users?.length > 0 && (() => {
-                  const MAX_VISIBLE = 5;
-                  const half = Math.floor(MAX_VISIBLE / 2);
-                  let start = Math.max(1, queryParams.page - half);
-                  let end = start + MAX_VISIBLE - 1;
-                  if (end > totalPages) {
-                    end = totalPages;
-                    start = Math.max(1, end - MAX_VISIBLE + 1);
-                  }
-                  const pageRange = Array.from({ length: end - start + 1 }, (_, idx) => start + idx);
-                  return (
-                    <div className="sticky bottom-0 z-10 px-6 py-4 bg-grey-50 border-t border-grey-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                      <p className="text-sm text-grey-600">
-                        Showing {((queryParams.page - 1) * queryParams.limit) + 1} to {Math.min(queryParams.page * queryParams.limit, total)} of {total} users
-                      </p>
-
-                      <div className="flex items-center gap-1.5">
-                        <button
-                          onClick={() => setQueryParams(prev => ({ ...prev, page: prev.page - 1 }))}
-                          disabled={queryParams.page === 1}
-                          className="p-2 rounded-lg border border-grey-200 text-grey-600 hover:bg-grey-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed mr-1 font-semibold"
-                          title="Previous Page"
-                        >
-                          &larr;
-                        </button>
-
-                        {start > 1 && (
-                          <>
-                            <button
-                              onClick={() => setQueryParams(prev => ({ ...prev, page: 1 }))}
-                              className="w-9 h-9 rounded-lg border border-grey-200 text-sm font-semibold flex items-center justify-center transition-colors cursor-pointer text-grey-600 hover:bg-grey-100"
-                            >
-                              1
-                            </button>
-                            {start > 2 && <span className="text-grey-400 font-bold px-1">…</span>}
-                          </>
-                        )}
-
-                        {pageRange.map((pageNum) => (
-                          <button
-                            key={pageNum}
-                            onClick={() => setQueryParams(prev => ({ ...prev, page: pageNum }))}
-                            className={`w-9 h-9 rounded-lg border text-sm font-semibold flex items-center justify-center transition-colors cursor-pointer ${
-                              pageNum === queryParams.page
-                                ? 'bg-primary text-white border-primary shadow-sm'
-                                : 'border-grey-200 text-grey-600 hover:bg-grey-100'
-                            }`}
-                          >
-                            {pageNum}
-                          </button>
-                        ))}
-
-                        {end < totalPages && (
-                          <>
-                            {end < totalPages - 1 && <span className="text-grey-400 font-bold px-1">…</span>}
-                            <button
-                              onClick={() => setQueryParams(prev => ({ ...prev, page: totalPages }))}
-                              className="w-9 h-9 rounded-lg border border-grey-200 text-sm font-semibold flex items-center justify-center transition-colors cursor-pointer text-grey-600 hover:bg-grey-100"
-                            >
-                              {totalPages}
-                            </button>
-                          </>
-                        )}
-
-                        <button
-                          onClick={() => setQueryParams(prev => ({ ...prev, page: prev.page + 1 }))}
-                          disabled={queryParams.page === totalPages}
-                          className="p-2 rounded-lg border border-grey-200 text-grey-600 hover:bg-grey-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed ml-1 font-semibold"
-                          title="Next Page"
-                        >
-                          &rarr;
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })()}
+                <PaginationControls
+                  page={queryParams.page}
+                  totalPages={totalPages}
+                  total={total}
+                  limit={queryParams.limit}
+                  label="users"
+                  onChange={(page) => setQueryParams(p => ({ ...p, page }))}
+                />
               </div>
             )}
           </div>

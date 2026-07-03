@@ -44,12 +44,10 @@ const userApiSlice = apiSlice.injectEndpoints({
 
     // ── Admin: Get all users ──────────────────────────────────────────────
     getAllUsers: builder.query({
-      query: ({ page = 1, limit = 10, search = '', role = '' } = {}) => {
-        const params = { page, limit };
-        if (search) params.search = search;
-        if (role) params.role = role;
-        return { url: "/users", params };
-      },
+      query: (params) => ({
+        url: "/users",
+        params,
+      }),
       providesTags: ["User"],
     }),
 
