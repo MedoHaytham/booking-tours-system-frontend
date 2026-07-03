@@ -1,3 +1,4 @@
+import { ChevronRight, ChevronLeft } from "lucide-react";
 /**
  * PaginationControls — reusable sticky pagination bar.
  *
@@ -36,10 +37,10 @@ export default function PaginationControls({ page, totalPages, total, limit, lab
         <button
           onClick={() => onChange(page - 1)}
           disabled={page === 1}
-          className="w-7 h-8 md:w-9 md:h-9 rounded-lg border border-grey-200 text-grey-600 hover:bg-grey-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed mr-1 font-semibold"
+          className="w-7 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg border border-grey-200 text-grey-600 hover:bg-grey-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed mr-1 font-semibold"
           title="Previous Page"
         >
-          &larr;
+          <ChevronLeft size={16}/>
         </button>
 
         {/* First page + ellipsis */}
@@ -87,10 +88,10 @@ export default function PaginationControls({ page, totalPages, total, limit, lab
         <button
           onClick={() => onChange(page + 1)}
           disabled={page === totalPages}
-          className="w-7 h-8 md:w-9 md:h-9 rounded-lg border border-grey-200 text-grey-600 hover:bg-grey-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed ml-1 font-semibold"
+          className="w-7 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg border border-grey-200 text-grey-600 hover:bg-grey-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed ml-1 font-semibold"
           title="Next Page"
         >
-          &rarr;
+          <ChevronRight size={16}/>
         </button>
       </div>
     </div>

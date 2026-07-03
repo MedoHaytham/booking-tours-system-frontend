@@ -59,7 +59,7 @@ export default function OverviewPage() {
     <main className="bg-grey-100 min-h-[60vh]">
 
       {/* ── Filter / Search Bar ── */}
-      <div className="bg-white border-b border-grey-200 shadow-sm sticky top-0 z-20">
+      <div className="bg-white border-b border-grey-200 shadow-sm sticky top-0 z-30">
         <div className="max-w-[120rem] mx-auto px-6 lg:px-[60px] py-4 flex flex-col md:flex-row gap-3 items-stretch md:items-center">
 
           {/* Search */}
@@ -187,7 +187,7 @@ export default function OverviewPage() {
               ))}
             </div>
 
-            <div className="max-w-300 mx-auto mt-12">
+            <div className="w-full 2xl:w-[69%] mx-auto mt-12">
               <div className="rounded-xl border border-grey-200 shadow-sm overflow-hidden bg-white">
                 <PaginationControls
                   page={queryParams.page}
