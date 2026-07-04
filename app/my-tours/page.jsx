@@ -5,6 +5,7 @@ import { useAuthGuard } from '@/hooks/useAuthGuard';
 import LoadingScreen from '@/components/LoadingScreen';
 import SideNav from '@/components/SideNav';
 import TourCard from '@/components/TourCard';
+import TourCardLoading from '@/components/TourCardLoading';
 
 export default function MyToursPage() {
 
@@ -27,22 +28,7 @@ export default function MyToursPage() {
 
           {isLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-10">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="rounded-xl overflow-hidden shadow-card">
-                  {/* image */}
-                  <div className="skeleton h-52 w-full" />
-                  {/* body */}
-                  <div className="p-6 space-y-4">
-                    <div className="skeleton h-5 w-3/4 rounded" />
-                    <div className="skeleton h-4 w-full rounded" />
-                    <div className="skeleton h-4 w-5/6 rounded" />
-                    <div className="flex justify-between pt-2">
-                      <div className="skeleton h-4 w-20 rounded" />
-                      <div className="skeleton h-4 w-20 rounded" />
-                    </div>
-                  </div>
-                </div>
-              ))}
+              <TourCardLoading length={3} />
             </div>
           ) : error ? (
             <p className="text-grey-500">

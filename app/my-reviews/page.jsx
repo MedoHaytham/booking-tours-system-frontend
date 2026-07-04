@@ -25,15 +25,17 @@ export default function MyReviews() {
             My reviews
           </h2>
 
-          {isLoading ? (
+          {true ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-10">
               {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="rounded-xl overflow-hidden shadow-card">
-                  {/* image */}
-                  <div className="skeleton h-52 w-full" />
-                  {/* body */}
-                  <div className="p-6 space-y-4">
-
+                <div key={i} className="overflow-hidden shadow-card">
+                  <div className="w-full flex justify-between items-center p-5">
+                    <div className="skeleton h-7 w-50 rounded-sm" />
+                    <div className="skeleton h-5 w-12 rounded-sm" />
+                  </div>
+                  <div className="p-5 space-y-8">
+                    <div className="skeleton h-22 w-full rounded-sm" />
+                    <div className="skeleton h-5 w-20 rounded-sm" />
                   </div>
                 </div>
               ))}

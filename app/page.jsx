@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { Search, SlidersHorizontal, ChevronDown } from 'lucide-react';
 import TourCard from "@/components/TourCard";
+import TourCardLoading from "@/components/TourCardLoading";
 import PaginationControls from "@/components/PaginationControls";
 import { useGetAllToursQuery } from "@/features/tourSlice";
 
@@ -147,20 +148,7 @@ export default function OverviewPage() {
         {/* Loading skeletons */}
         {isLoading ? (
           <div className="max-w-300 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[70px]">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="rounded-xl overflow-hidden shadow-card">
-                <div className="skeleton h-52 w-full" />
-                <div className="p-6 space-y-4">
-                  <div className="skeleton h-5 w-3/4 rounded" />
-                  <div className="skeleton h-4 w-full rounded" />
-                  <div className="skeleton h-4 w-5/6 rounded" />
-                  <div className="flex justify-between pt-2">
-                    <div className="skeleton h-4 w-20 rounded" />
-                    <div className="skeleton h-4 w-20 rounded" />
-                  </div>
-                </div>
-              </div>
-            ))}
+            <TourCardLoading length={3} isHome={true}/>
           </div>
         ) : error ? (
           <p className="max-w-xl mx-auto text-center text-grey-500">

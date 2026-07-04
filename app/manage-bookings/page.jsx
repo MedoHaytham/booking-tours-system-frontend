@@ -264,7 +264,7 @@ export default function ManageBookingsPage() {
                         <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Customer</th>
                         <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Price</th>
                         <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Tour Date</th>
-                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Session ID</th>
+                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500"> Booked at</th>
                         <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500">Status</th>
                         <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-grey-500 text-right">Actions</th>
                       </tr>
@@ -328,9 +328,9 @@ export default function ManageBookingsPage() {
                                 </div>
                               </td>
 
-                              {/* Session ID */}
+                              {/* Created at */}
                               <td className="px-6 py-4 text-xs font-mono text-grey-500 max-w-[150px] truncate" title={b.sessionId}>
-                                {b.sessionId || 'N/A'}
+                                {formatDate(b.createdAt) || 'N/A'}
                               </td>
 
                               {/* Status Badge */}
