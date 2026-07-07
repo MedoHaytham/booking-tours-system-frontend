@@ -37,7 +37,7 @@ export default function Footer() {
         </ul>
 
         <p className="text-grey-500 justify-self-center md:justify-self-end order-2 md:order-3">
-          &copy; by Jonas Schmedtmann for Udemy. All rights reserved!
+          &copy; by Mohamed Haytham. All rights reserved!
         </p>
       </div>
       
