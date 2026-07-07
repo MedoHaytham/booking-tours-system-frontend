@@ -272,6 +272,20 @@ export default function TourPage({ params }) {
               <p className="text-lg text-grey-600 pr-3">
                 {tour.duration} days. 1 adventure. Infinite memories. Make it yours today!
               </p>
+              {tour.isDiscountActive && (
+                <div className="flex items-center gap-3 flex-wrap mt-1">
+                  <span className="text-2xl font-extrabold text-primary">${tour.priceDiscount}</span>
+                  <span className="text-grey-400 line-through text-lg">${tour.price}</span>
+                  <span className="bg-red-500 text-white text-xs font-extrabold uppercase tracking-wider px-2 py-1 rounded-md">
+                    -{tour.discountPercentage}% OFF
+                  </span>
+                  {tour.discountUntil && (
+                    <span className="text-xs text-grey-400">
+                      until {new Date(tour.discountUntil).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
             <div className="w-full max-w-[370px] justify-self-center sm:justify-self-start lg:justify-self-end">
               {!user ? (

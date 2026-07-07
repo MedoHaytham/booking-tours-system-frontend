@@ -71,10 +71,22 @@ export default function TourCard({ tour }) {
 
       <div className="mt-auto flex items-center justify-between bg-grey-100 border-t border-grey-200/60 px-[30px] py-[25px] text-[14px]">
         <div className="flex flex-col gap-[10px]">
-          <p>
-            <span className="font-bold">${tour.price}</span>{' '}
-            <span className="text-grey-500">per person</span>
-          </p>
+          <div className="flex items-center gap-2 flex-wrap">
+            {tour.isDiscountActive ? (
+              <>
+                <span className="font-bold text-primary">${tour.priceDiscount}</span>
+                <span className="text-grey-400 line-through text-xs">${tour.price}</span>
+                <span className="bg-red-500 text-white text-[10px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded">
+                  -{tour.discountPercentage}%
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="font-bold">${tour.price}</span>
+                <span className="text-grey-500">per person</span>
+              </>
+            )}
+          </div>
           <p>
             <span className="font-bold">{tour.ratingsAverage}</span>{' '}
             <span className="text-grey-500">rating ({tour.ratingsQuantity})</span>

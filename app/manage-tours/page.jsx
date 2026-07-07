@@ -130,6 +130,8 @@ export default function ManageToursPage() {
   const EMPTY_CREATE = {
     name: '', price: '', duration: '', maxGroupSize: '',
     difficulty: 'easy', summary: '', description: '',
+    discountPercentage: '',
+    discountUntil: '',
     startDates: [],
     guides: [],
     startLocation: { description: '', address: '', coordinates: [0, 0] },
@@ -163,6 +165,10 @@ export default function ManageToursPage() {
       maxGroupSize: tour.maxGroupSize || '',
       difficulty: tour.difficulty || 'easy',
       summary: tour.summary || '',
+      discountPercentage: tour.discountPercentage || '',
+      discountUntil: tour.discountUntil
+        ? new Date(tour.discountUntil).toISOString().split('T')[0]
+        : '',
       startDates: tour.startDates ? tour.startDates.map(d => ({
         _id: d._id,
         startDate: d.startDate,
@@ -251,6 +257,8 @@ export default function ManageToursPage() {
         price: Number(editForm.price),
         duration: Number(editForm.duration),
         maxGroupSize: Number(editForm.maxGroupSize),
+        discountPercentage: editForm.discountPercentage !== '' ? Number(editForm.discountPercentage) : 0,
+        discountUntil: editForm.discountUntil || undefined,
         startLocation,
         locations
       };
@@ -308,6 +316,8 @@ export default function ManageToursPage() {
         price: Number(createForm.price),
         duration: Number(createForm.duration),
         maxGroupSize: Number(createForm.maxGroupSize),
+        discountPercentage: createForm.discountPercentage !== '' ? Number(createForm.discountPercentage) : undefined,
+        discountUntil: createForm.discountUntil || undefined,
         startLocation,
         locations
       };
@@ -645,8 +655,20 @@ export default function ManageToursPage() {
                             </td>
 
                             {/* Price */}
-                            <td className="px-6 py-4 text-sm font-semibold text-grey-700 whitespace-nowrap">
-                              {formatPrice(t.price)}
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              {t.isDiscountActive ? (
+                                <div className="flex flex-col gap-0.5">
+                                  <div className="flex items-center gap-1.5 flex-wrap">
+                                    <span className="text-sm font-bold text-primary">{formatPrice(t.priceDiscount)}</span>
+                                    <span className="bg-red-500 text-white text-[9px] font-extrabold uppercase tracking-wider px-1 py-0.5 rounded">
+                                      -{t.discountPercentage}%
+                                    </span>
+                                  </div>
+                                  <span className="text-xs text-grey-400 line-through">{formatPrice(t.price)}</span>
+                                </div>
+                              ) : (
+                                <span className="text-sm font-semibold text-grey-700">{formatPrice(t.price)}</span>
+                              )}
                             </td>
 
                             {/* Start Dates */}
@@ -812,6 +834,51 @@ export default function ManageToursPage() {
                     />
                   </div>
                 </div>
+              </div>
+
+              {/* Discount Section */}
+              <div className="rounded-xl border border-red-100 bg-red-50/50 p-4 space-y-3">
+                <p className="text-xs font-bold uppercase tracking-wider text-red-500 flex items-center gap-1.5">
+                  <span className="inline-block w-3 h-3 rounded bg-red-500" />
+                  Discount (optional)
+                </p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="create-discount-pct" className="block text-xs font-bold uppercase tracking-wider text-grey-500 mb-1.5">
+                      Discount %
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-grey-400 font-bold text-sm">%</span>
+                      <input
+                        id="create-discount-pct"
+                        type="number"
+                        min="0"
+                        max="100"
+                        placeholder="e.g. 20"
+                        value={createForm.discountPercentage}
+                        onChange={(e) => setCreateForm((p) => ({ ...p, discountPercentage: e.target.value }))}
+                        className="w-full pl-8 pr-3 py-3 rounded-xl bg-white border border-red-200 text-sm text-grey-700 focus:outline-none focus:border-red-400 font-medium"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="create-discount-until" className="block text-xs font-bold uppercase tracking-wider text-grey-500 mb-1.5">
+                      Discount Until
+                    </label>
+                    <input
+                      id="create-discount-until"
+                      type="date"
+                      value={createForm.discountUntil}
+                      onChange={(e) => setCreateForm((p) => ({ ...p, discountUntil: e.target.value }))}
+                      className="w-full px-3 py-3 rounded-xl bg-white border border-red-200 text-sm text-grey-700 focus:outline-none focus:border-red-400 font-medium"
+                    />
+                  </div>
+                </div>
+                {createForm.discountPercentage && createForm.price && (
+                  <p className="text-xs text-red-500 font-medium">
+                    Discounted price: <strong>${Math.round(Number(createForm.price) * (1 - Number(createForm.discountPercentage) / 100))}</strong> per person
+                  </p>
+                )}
               </div>
 
               {/* Max Group Size & Difficulty */}
@@ -1026,6 +1093,51 @@ export default function ManageToursPage() {
                     />
                   </div>
                 </div>
+              </div>
+
+              {/* Discount Section */}
+              <div className="rounded-xl border border-red-100 bg-red-50/50 p-4 space-y-3">
+                <p className="text-xs font-bold uppercase tracking-wider text-red-500 flex items-center gap-1.5">
+                  <span className="inline-block w-3 h-3 rounded bg-red-500" />
+                  Discount (optional)
+                </p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="edit-discount-pct" className="block text-xs font-bold uppercase tracking-wider text-grey-500 mb-1.5">
+                      Discount %
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-grey-400 font-bold text-sm">%</span>
+                      <input
+                        id="edit-discount-pct"
+                        type="number"
+                        min="0"
+                        max="100"
+                        placeholder="e.g. 20"
+                        value={editForm.discountPercentage}
+                        onChange={(e) => setEditForm((p) => ({ ...p, discountPercentage: e.target.value }))}
+                        className="w-full pl-8 pr-3 py-3 rounded-xl bg-white border border-red-200 text-sm text-grey-700 focus:outline-none focus:border-red-400 font-medium"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="edit-discount-until" className="block text-xs font-bold uppercase tracking-wider text-grey-500 mb-1.5">
+                      Discount Until
+                    </label>
+                    <input
+                      id="edit-discount-until"
+                      type="date"
+                      value={editForm.discountUntil}
+                      onChange={(e) => setEditForm((p) => ({ ...p, discountUntil: e.target.value }))}
+                      className="w-full px-3 py-3 rounded-xl bg-white border border-red-200 text-sm text-grey-700 focus:outline-none focus:border-red-400 font-medium"
+                    />
+                  </div>
+                </div>
+                {editForm.discountPercentage && editForm.price && (
+                  <p className="text-xs text-red-500 font-medium">
+                    Discounted price: <strong>${Math.round(Number(editForm.price) * (1 - Number(editForm.discountPercentage) / 100))}</strong> per person
+                  </p>
+                )}
               </div>
 
               {/* Max Group Size & Difficulty */}
