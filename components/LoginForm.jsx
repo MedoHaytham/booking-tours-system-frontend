@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useLoginMutation } from '@/features/authSlice';
 import { useAlert } from '@/context/AlertContext';
 import { EyeOffIcon, EyeIcon } from 'lucide-react';
@@ -73,6 +74,14 @@ export default function LoginForm() {
           >
             {showPassword ? <EyeOffIcon size={20} /> : <EyeIcon size={20} />}
           </button>
+        </div>
+        <div className="flex justify-end items-baseline mt-2">
+          <Link
+            href="/forgot-password"
+            className="text-sm font-semibold text-primary hover:underline"
+          >
+            Forgot password?
+          </Link>
         </div>
       </div>
 

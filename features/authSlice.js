@@ -66,12 +66,47 @@ const authApiSlice = apiSlice.injectEndpoints({
       // Clear everything from cache so protected data is not visible after logout
       invalidatesTags: ["User", "Booking"],
     }),
+
+    // ── Forgot Password ───────────────────────────────────────────────────
+    forgotPassword: builder.mutation({
+      query: (body) => ({
+        url: "/users/forgotPassword",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    // ── Reset Password ────────────────────────────────────────────────────
+    resetPassword: builder.mutation({
+      query: ({ resetToken, ...body }) => ({
+        url: `/users/resetPassword/${resetToken}`,
+        method: "PATCH",
+        body,
+      }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          seedMeCache(dispatch, data?.data?.user ?? data?.user);
+        } catch {}
+      },
+      invalidatesTags: ["User"],
+    }),
+
+    // ── Confirm Email ─────────────────────────────────────────────────────
+    confirmEmail: builder.query({
+      query: (confirmationToken) => ({
+        url: `/users/confirmEmail/${confirmationToken}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
 export const { 
   useSignupMutation, 
   useLoginMutation, 
-  useLogoutMutation 
+  useLogoutMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
+  useConfirmEmailQuery,
 } = authApiSlice;
-
