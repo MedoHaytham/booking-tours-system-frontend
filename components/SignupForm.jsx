@@ -34,8 +34,8 @@ export default function SignupForm() {
 
     try {
       await signup({ name, email, password, passwordConfirm }).unwrap();
-      showAlert('success', 'Account created successfully!');
-      router.push('/');
+      showAlert('success', 'Account created successfully! Please verify your email.');
+      router.push(`/verify-email?email=${encodeURIComponent(email)}`);
       router.refresh();
     } catch (err) {
       console.error('Signup error:', err);
