@@ -1,25 +1,44 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useAlert } from '@/context/AlertContext';
 import { Loader2 } from 'lucide-react';
 
 export default function AuthSuccessPage() {
   const { showAlert } = useAlert();
-  const hasLoaded = useRef(false);
+  const searchParams = useSearchParams();
+  const hasRun = useRef(false);
 
   useEffect(() => {
-    if (hasLoaded.current) return;
-    hasLoaded.current = true;
+    if (hasRun.current) return;
+    hasRun.current = true;
 
-    // The JWT cookie has already been set by the backend redirect.
-    // Show the success alert then do a hard navigation to "/" so that
-    // the entire Next.js app re-initialises with the new cookie in place.
-    // Using window.location instead of router.push ensures the RTK Query
-    // cache starts clean with the fresh cookie automatically included.
-    showAlert('success', 'Logged in successfully with Google!');
-    window.location.href = '/';
-  }, [showAlert]);
+    const token = searchParams.get('token');
+
+    // No token in URL means something is wrong or someone opened the page directly
+    if (!token) {
+      window.location.href = '/login';
+      return;
+    }
+
+    // This request is same-origin (it passes through Next.js rewrite proxy)
+    // So the cookie returned in the response will be correctly saved on the frontend domain
+    fetch('/api/v1/users/auth/exchange', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Exchange failed');
+        showAlert('success', 'Logged in successfully with Google!');
+        window.location.href = '/';
+      })
+      .catch(() => {
+        window.location.href = '/login';
+      });
+  }, [searchParams, showAlert]);
 
   return (
     <main className="bg-grey-100 min-h-[80vh] px-6 py-20 flex items-center justify-center">
