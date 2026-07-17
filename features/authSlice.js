@@ -3,7 +3,7 @@
 // RTK Query endpoints for every auth-related route:
 //   POST /api/v1/users/signup
 //   POST /api/v1/users/login
-//   GET  /api/v1/users/logout
+//   POST /api/v1/users/logout
 //
 // The API sets/clears an httpOnly JWT cookie on login/logout — that is why
 // credentials:"include" is set on the base query in apiSlice.js.
@@ -61,9 +61,19 @@ const authApiSlice = apiSlice.injectEndpoints({
     logout: builder.mutation({
       query: () => ({
         url: "/users/logout",
-        method: "GET",
+        method: "POST",
       }),
-      // Clear everything from cache so protected data is not visible after logout
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(
+            apiSlice.util.upsertQueryData("getMe", undefined, {
+              status: "success",
+              data: { data: null },
+            })
+          );
+        } catch {}
+      },
       invalidatesTags: ["User", "Booking"],
     }),
 

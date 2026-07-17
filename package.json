@@ -11,6 +11,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.12.0",
     "@stripe/stripe-js": "^9.8.0",
+    "async-mutex": "^0.5.0",
     "axios": "^1.18.0",
     "js-cookie": "^3.0.8",
     "lucide-react": "^1.21.0",

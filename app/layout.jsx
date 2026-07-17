@@ -5,6 +5,7 @@ import StoreProvider from "../components/StoreProvider";
 import { AlertProvider } from "../context/AlertContext";
 import { SidebarProvider } from "../context/SidebarContext";
 import Alert from "../components/Alert";
+import AuthGate from "../components/AuthGate";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -16,7 +17,6 @@ const lato = Lato({
   variable: "--font-lato",
   display: "swap",
 });
-
 
 export const metadata = {
   title: {
@@ -38,10 +38,12 @@ export default function RootLayout({ children }) {
         <StoreProvider>
           <AlertProvider>
             <SidebarProvider>
-              <Alert />
-              <Header />
-              {children}
-              <Footer />
+              <AuthGate>
+                <Alert />
+                <Header />
+                {children}
+                <Footer />
+              </AuthGate>
             </SidebarProvider>
           </AlertProvider>
         </StoreProvider>
@@ -49,4 +51,3 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
-
