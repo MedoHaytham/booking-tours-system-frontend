@@ -1,8 +1,38 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Calendar, Flag, Users } from 'lucide-react';
+import { MapPin, Calendar, Flag, Users, Heart } from 'lucide-react';
+import { useGetMeQuery } from '@/features/userSlice';
+import { useGetMyFavoritesQuery, useToggleFavoriteMutation } from '@/features/favoriteSlice';
+import { useAlert } from '@/context/AlertContext';
+import { useRouter } from 'next/navigation';
 
 export default function TourCard({ tour }) {
+  const { data: meData } = useGetMeQuery();
+  const user = meData?.data?.data ?? null;
+
+  const { data: favoritesData } = useGetMyFavoritesQuery(undefined, { skip: !user });
+  const favorites = favoritesData?.data?.tours ?? [];
+  const isFavorite = favorites.some((fav) => (fav._id || fav.id) === (tour._id || tour.id));
+
+  const [toggleFavorite, { isLoading: isToggling }] = useToggleFavoriteMutation();
+  const { showAlert } = useAlert();
+  const router = useRouter();
+
+  const handleToggleFavorite = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) {
+      showAlert('error', 'Please log in to add tours to your favorites.');
+      router.push('/login');
+      return;
+    }
+    try {
+      await toggleFavorite(tour._id || tour.id).unwrap();
+    } catch (err) {
+      showAlert('error', err?.data?.message || 'Something went wrong.');
+    }
+  };
+
   const cover = tour.imageCover?.startsWith('http')
     ? tour.imageCover
     : `/img/tours/${tour.imageCover}`;
@@ -20,6 +50,17 @@ export default function TourCard({ tour }) {
   return (
     <div className="rounded-xl overflow-hidden shadow-card bg-white flex flex-col transition-transform duration-300 hover:-translate-y-1">
       <div className="relative">
+        <button
+          onClick={handleToggleFavorite}
+          disabled={isToggling}
+          className="absolute top-4 right-4 z-40 p-2.5 rounded-full bg-white/95 hover:bg-white text-grey-500 hover:text-red-500 transition-all shadow-md active:scale-95 cursor-pointer"
+          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+        >
+          <Heart
+            size={18}
+            className={isFavorite ? "fill-red-500 text-red-500" : "text-grey-600"}
+          />
+        </button>
         <div className="relative h-[220px] clip-card-picture">
           <Image
             src={cover}

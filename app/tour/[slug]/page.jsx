@@ -4,7 +4,7 @@ import { use } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Clock, MapPin, Calendar, TrendingUp, User, Star } from 'lucide-react';
+import { Clock, MapPin, Calendar, TrendingUp, User, Star, Heart } from 'lucide-react';
 
 import ReviewCard from '@/components/ReviewCard';
 import TourMap from '@/components/TourMap';
@@ -14,6 +14,9 @@ import ReviewForm from '@/components/ReviewForm';
 import { useGetTourBySlugQuery } from '@/features/tourSlice';
 import { useGetMeQuery } from '@/features/userSlice';
 import { useGetMyToursQuery } from '@/features/bookingSlice';
+import { useGetMyFavoritesQuery, useToggleFavoriteMutation } from '@/features/favoriteSlice';
+import { useAlert } from '@/context/AlertContext';
+import { useRouter } from 'next/navigation';
 
 
 function srcFor(path, folder) {
@@ -29,6 +32,27 @@ export default function TourPage({ params }) {
   
   const { data: meData } = useGetMeQuery();
   const user = meData?.data?.data ?? null;
+
+  const { data: favoritesData } = useGetMyFavoritesQuery(undefined, { skip: !user });
+  const favorites = favoritesData?.data?.tours ?? [];
+  const isFavorite = favorites.some((fav) => (fav._id || fav.id) === (tour?._id || tour?.id));
+
+  const [toggleFavorite, { isLoading: isToggling }] = useToggleFavoriteMutation();
+  const { showAlert } = useAlert();
+  const router = useRouter();
+
+  const handleToggleFavorite = async () => {
+    if (!user) {
+      showAlert('error', 'Please log in to add tours to your favorites.');
+      router.push('/login');
+      return;
+    }
+    try {
+      await toggleFavorite(tour?._id || tour?.id).unwrap();
+    } catch (err) {
+      showAlert('error', err?.data?.message || 'Something went wrong.');
+    }
+  };
 
   const { data: myToursData } = useGetMyToursQuery(undefined, { skip: !user });
   const bookedDates = myToursData?.data?.bookedDates ?? [];
@@ -82,6 +106,18 @@ export default function TourPage({ params }) {
     <main>
       {/* HERO */}
       <section className="relative h-[60vh] md:h-[38vw] clip-hero">
+        {/* Floating Heart Button */}
+        <button
+          onClick={handleToggleFavorite}
+          disabled={isToggling}
+          className="absolute top-6 right-6 z-30 p-3 rounded-full bg-white/90 hover:bg-white text-grey-600 hover:text-red-500 transition-all shadow-lg active:scale-95 cursor-pointer"
+          title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+        >
+          <Heart
+            size={24}
+            className={isFavorite ? "fill-red-500 text-red-500" : "text-grey-600"}
+          />
+        </button>
         <div className="relative h-full w-full">
           {tour.imageCover && (
             <Image

@@ -11,7 +11,8 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  X
+  X,
+  Heart
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
@@ -22,6 +23,7 @@ import { useSidebar } from '@/context/SidebarContext';
 
 const items = [
   { href: '/me', label: 'Settings', icon: Settings, key: 'settings' },
+  { href: '/my-favorites', label: 'My favorites', icon: Heart, key: 'favorites' },
   { href: '/my-tours', label: 'My bookings', icon: Briefcase, key: 'bookings' },
   { href: '/my-reviews', label: 'My reviews', icon: Star, key: 'reviews' },
 ];

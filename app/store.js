@@ -9,6 +9,7 @@ import "../features/authSlice";
 import "../features/tourSlice";
 import "../features/userSlice";
 import "../features/bookingSlice";
+import "../features/favoriteSlice";
 
 export const store = configureStore({
   reducer: {
