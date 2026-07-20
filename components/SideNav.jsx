@@ -169,7 +169,7 @@ export default function SideNav({ active = 'settings', isAdmin = false, isLeadGu
       {/* ── MOBILE: Slide-in drawer (< lg) ── */}
       <nav
         aria-label="Mobile navigation"
-        className={`lg:hidden fixed inset-y-0 left-0 z-5000000 bg-gradient-primary py-12 flex flex-col w-72 shadow-2xl transition-transform duration-300 ease-in-out ${
+        className={`lg:hidden fixed inset-y-0 left-0 z-5000000 bg-gradient-primary py-12 flex flex-col w-72 shadow-2xl transition-transform duration-300 ease-in-out overflow-y-auto ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
