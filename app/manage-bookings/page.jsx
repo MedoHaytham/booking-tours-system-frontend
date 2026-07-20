@@ -284,7 +284,7 @@ export default function ManageBookingsPage() {
                           return (
                             <tr key={b._id} className="hover:bg-grey-50/50 transition-colors">
                               {/* Tour Name */}
-                              <td className="px-6 py-4 font-semibold text-sm text-grey-700 max-w-[200px] truncate">
+                              <td className="px-6 py-4 font-semibold text-sm text-grey-700 max-w-50 truncate">
                                 <Link href={`/tour/${b.tour?.slug}`}>
                                   <span className="hover:text-primary hover:underline transition-colors cursor-pointer">
                                     {b.tour?.name || <span className="text-grey-400 italic">Deleted Tour</span>}
@@ -305,10 +305,10 @@ export default function ManageBookingsPage() {
                                     />
                                   </div>
                                   <div className="min-w-0">
-                                    <p className="font-semibold text-sm text-grey-700 truncate max-w-[150px]">
+                                    <p className="font-semibold text-sm text-grey-700 truncate max-w-37.5">
                                       {b.user?.name || <span className="text-grey-400 italic font-normal">Deleted User</span>}
                                     </p>
-                                    <p className="text-xs text-grey-500 truncate max-w-[180px]">
+                                    <p className="text-xs text-grey-500 truncate max-w-45">
                                       {b.user?.email || 'N/A'}
                                     </p>
                                   </div>
@@ -329,7 +329,7 @@ export default function ManageBookingsPage() {
                               </td>
 
                               {/* Created at */}
-                              <td className="px-6 py-4 text-xs font-mono text-grey-500 max-w-[150px] truncate" title={b.sessionId}>
+                              <td className="px-6 py-4 text-xs font-mono text-grey-500 max-w-37.5 truncate" title={b.sessionId}>
                                 {formatDate(b.createdAt) || 'N/A'}
                               </td>
 

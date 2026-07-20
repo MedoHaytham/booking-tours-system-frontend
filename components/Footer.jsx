@@ -11,7 +11,7 @@ const links = [
 
 export default function Footer() {
   return (
-    <footer className="bg-grey-100 px-6 sm:px-8 lg:px-10 pt-[60px] pb-[30px] text-sm grid grid-cols-1 md:grid-cols-2 gap-y-5 justify-items-center md:justify-items-stretch">
+    <footer className="bg-grey-100 px-6 sm:px-8 lg:px-10 pt-15 pb-7.5 text-sm grid grid-cols-1 md:grid-cols-2 gap-y-5 justify-items-center md:justify-items-stretch">
       <div className="flex md:items-center">
         <Image 
           src="/img/logo-green.png"

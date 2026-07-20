@@ -60,8 +60,8 @@ export default function OverviewPage() {
     <main className="bg-grey-100 min-h-[60vh]">
 
       {/* ── Filter / Search Bar ── */}
-      <div className="bg-white border-b border-grey-200 shadow-sm sticky top-0 z-30">
-        <div className="max-w-[120rem] mx-auto px-6 lg:px-[60px] py-4 flex flex-col md:flex-row gap-3 items-stretch md:items-center">
+      <div className="bg-white border-b border-grey-200 shadow-sm sticky top-0 z-50">
+        <div className="max-w-[120rem] mx-auto px-6 lg:px-15 py-4 flex flex-col md:flex-row gap-3 items-stretch md:items-center">
 
           {/* Search */}
           <div className="relative flex-1 min-w-0 max-w-sm">
@@ -144,10 +144,10 @@ export default function OverviewPage() {
       </div>
 
       {/* ── Content ── */}
-      <div className="min-h-[69vh] flex flex-col justify-center items-center px-6 lg:px-[60px] py-16">
+      <div className="min-h-[69vh] flex flex-col justify-center items-center px-6 lg:px-15 py-16">
         {/* Loading skeletons */}
         {isLoading ? (
-          <div className="max-w-300 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[70px]">
+          <div className="max-w-300 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-17.5">
             <TourCardLoading length={3} isHome={true}/>
           </div>
         ) : error ? (
@@ -169,7 +169,7 @@ export default function OverviewPage() {
           </div>
         ) : (
           <>
-            <div className="max-w-300 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[70px]">
+            <div className="max-w-300 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-17.5">
               {tours.map((tour) => (
                 <TourCard key={tour._id || tour.slug} tour={tour} />
               ))}

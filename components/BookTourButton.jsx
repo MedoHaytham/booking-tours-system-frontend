@@ -41,7 +41,7 @@ export default function BookTourButton({ tourId, date }) {
     return (
       <button
         disabled
-        className="w-full sm:w-[370px] bg-primary text-white uppercase text-sm sm:text-base rounded-full px-4 sm:px-10 py-4 opacity-60 cursor-not-allowed"
+        className="w-full sm:w-92.5 bg-primary text-white uppercase text-sm sm:text-base rounded-full px-4 sm:px-10 py-4 opacity-60 cursor-not-allowed"
       >
         Book tour now!
       </button>
@@ -53,7 +53,7 @@ export default function BookTourButton({ tourId, date }) {
     return (
       <Link
         href="/login"
-        className="inline-block text-center w-full sm:w-[370px] bg-primary text-white uppercase text-sm sm:text-base rounded-full px-4 sm:px-10 py-4 transition-transform hover:-translate-y-0.5"
+        className="inline-block text-center w-full sm:w-92.5 bg-primary text-white uppercase text-sm sm:text-base rounded-full px-4 sm:px-10 py-4 transition-transform hover:-translate-y-0.5"
       >
         Log in to book tour
       </Link>
@@ -100,7 +100,7 @@ export default function BookTourButton({ tourId, date }) {
         type="button"
         onClick={handleBooking}
         disabled={loading || date.soldOut || isPassed || isTourBooked}
-        className={`w-full sm:w-[370px] bg-primary text-white uppercase text-sm sm:text-base rounded-full px-4 sm:px-10 py-4 transition-transform hover:-translate-y-0.5 ${(date.soldOut || isPassed || isTourBooked) ? 'opacity-60 cursor-not-allowed' : 'disabled:opacity-60 disabled:cursor-not-allowed'} mb-5`}
+        className={`w-full sm:w-92.5 bg-primary text-white uppercase text-sm sm:text-base rounded-full px-4 sm:px-10 py-4 transition-transform hover:-translate-y-0.5 ${(date.soldOut || isPassed || isTourBooked) ? 'opacity-60 cursor-not-allowed' : 'disabled:opacity-60 disabled:cursor-not-allowed'} mb-5`}
       >
         {isPassed ? (
           <>Date Passed — <span className="font-bold">{formattedDate(date.startDate)}</span></>

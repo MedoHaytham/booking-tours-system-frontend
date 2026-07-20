@@ -113,7 +113,7 @@ export default function Header() {
                   {user.name?.[0]}
                 </span>
               )}
-              <span className="max-w-[120px] truncate lg:max-w-[150px] xl:max-w-[170px]">{user.name?.split(' ')[0]}</span>
+              <span className="max-w-30 truncate lg:max-w-37.5 xl:max-w-42.5">{user.name?.split(' ')[0]}</span>
             </Link>
           </>
         ) : isLoading ? (

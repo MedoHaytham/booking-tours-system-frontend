@@ -14,7 +14,7 @@ export default function ImageUploadField({ label, id, accept, multiple, preview,
       </label>
       <div
         onClick={() => inputRef.current?.click()}
-        className="relative w-full min-h-[90px] border-2 border-dashed border-grey-200 rounded-xl bg-grey-50 hover:bg-grey-100 hover:border-primary/50 transition-colors cursor-pointer flex items-center justify-center gap-3 overflow-hidden"
+        className="relative w-full min-h-22.5 border-2 border-dashed border-grey-200 rounded-xl bg-grey-50 hover:bg-grey-100 hover:border-primary/50 transition-colors cursor-pointer flex items-center justify-center gap-3 overflow-hidden"
       >
         {preview?.length ? (
           <div className="flex flex-wrap gap-2 p-3 justify-center">

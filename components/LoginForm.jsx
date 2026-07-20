@@ -33,7 +33,7 @@ export default function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-10">
       {errorMsg && (
-        <div className="bg-red-50 border-l-4 border-error p-4 text-error rounded-[4px] text-sm font-medium">
+        <div className="bg-red-50 border-l-4 border-error p-4 text-error rounded-sm text-sm font-medium">
           {errorMsg}
         </div>
       )}
@@ -48,7 +48,7 @@ export default function LoginForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@example.com"
-          className="block w-full rounded-[4px] bg-grey-200 border-t-[3px] border-b-[3px] border-transparent px-7 py-5 text-sm transition-all focus:outline-none focus:border-b-primary placeholder:text-grey-400"
+          className="block w-full rounded-sm bg-grey-200 border-t-[3px] border-b-[3px] border-transparent px-7 py-5 text-sm transition-all focus:outline-none focus:border-b-primary placeholder:text-grey-400"
         />
       </div>
 
@@ -65,7 +65,7 @@ export default function LoginForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
-            className="block w-full rounded-[4px] bg-grey-200 border-t-[3px] border-b-[3px] border-transparent px-7 py-5 text-sm transition-all focus:outline-none focus:border-b-primary placeholder:text-grey-400"
+            className="block w-full rounded-sm bg-grey-200 border-t-[3px] border-b-[3px] border-transparent px-7 py-5 text-sm transition-all focus:outline-none focus:border-b-primary placeholder:text-grey-400"
           />
           <button
             type="button"

@@ -61,7 +61,7 @@ export default function TourCard({ tour }) {
             className={isFavorite ? "fill-red-500 text-red-500" : "text-grey-600"}
           />
         </button>
-        <div className="relative h-[220px] clip-card-picture">
+        <div className="relative h-55 clip-card-picture">
           <Image
             src={cover}
             alt={tour.name}
@@ -70,21 +70,21 @@ export default function TourCard({ tour }) {
             className="object-cover"
           />
           {tour.available === false && (
-            <div className="absolute top-0 left-0 w-[110px] h-[110px] overflow-hidden z-30 pointer-events-none">
-              <div className="absolute top-[22px] left-[-28px] w-[130px] bg-[#e02020] text-white text-center text-[11px] font-extrabold tracking-[1.5px] uppercase py-[5px] -rotate-45 shadow-[0_2px_8px_rgba(0,0,0,0.35)]">
+            <div className="absolute top-0 left-0 w-27.5 h-27.5 overflow-hidden z-30 pointer-events-none">
+              <div className="absolute top-5.5 -left-7 w-32.5 bg-[#e02020] text-white text-center text-[11px] font-extrabold tracking-[1.5px] uppercase py-1.25 -rotate-45 shadow-[0_2px_8px_rgba(0,0,0,0.35)]">
                 Sold Out
               </div>
             </div>
           )}
         </div>
         <h3 className="absolute bottom-4 right-5 z-20 w-[70%] text-right text-2xl sm:text-[27.5px] text-white font-light uppercase leading-[1.6]">
-          <span className="heading-primary-span bg-gradient-primary-soft px-[15px] py-[10px] leading-none">
+          <span className="heading-primary-span bg-gradient-primary-soft px-3.75 py-2.5 leading-none">
             {tour.name}
           </span>
         </h3>
       </div>
 
-      <div className="grid grid-cols-2 gap-x-[17.5px] gap-y-[20px] px-[30px] py-[25px]">
+      <div className="grid grid-cols-2 gap-x-[17.5px] gap-y-5 px-7.5 py-6.25">
         <h4 className="col-span-2 text-xs font-bold uppercase">
           {tour.difficulty} {tour.duration}-day tour
         </h4>
@@ -110,8 +110,8 @@ export default function TourCard({ tour }) {
         </div>
       </div>
 
-      <div className="mt-auto flex items-center justify-between bg-grey-100 border-t border-grey-200/60 px-[30px] py-[25px] text-[14px]">
-        <div className="flex flex-col gap-[10px]">
+      <div className="mt-auto flex items-center justify-between bg-grey-100 border-t border-grey-200/60 px-7.5 py-6.25 text-[14px]">
+        <div className="flex flex-col gap-2.5">
           <div className="flex items-center gap-2 flex-wrap">
             {tour.isDiscountActive ? (
               <>
@@ -135,7 +135,7 @@ export default function TourCard({ tour }) {
         </div>
         <Link
           href={`/tour/${tour.slug}`}
-          className="inline-block bg-primary text-white uppercase rounded-full px-[30px] py-[12.5px] transition-colors hover:bg-primary-light"
+          className="inline-block bg-primary text-white uppercase rounded-full px-7.5 py-[12.5px] transition-colors hover:bg-primary-light"
         >
           Details
         </Link>

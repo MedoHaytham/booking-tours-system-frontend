@@ -62,7 +62,7 @@ export default function UserDataForm({ user }) {
           required
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="block w-full rounded-[4px] bg-grey-200 border-t-[3px] border-b-[3px] border-transparent px-7 py-5 text-sm transition-all focus:outline-none focus:border-b-primary"
+          className="block w-full rounded-sm bg-grey-200 border-t-[3px] border-b-[3px] border-transparent px-7 py-5 text-sm transition-all focus:outline-none focus:border-b-primary"
         />
       </div>
 
@@ -76,7 +76,7 @@ export default function UserDataForm({ user }) {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="block w-full rounded-[4px] bg-grey-200 border-t-[3px] border-b-[3px] border-transparent px-7 py-5 text-sm transition-all focus:outline-none focus:border-b-primary"
+          className="block w-full rounded-sm bg-grey-200 border-t-[3px] border-b-[3px] border-transparent px-7 py-5 text-sm transition-all focus:outline-none focus:border-b-primary"
         />
       </div>
 

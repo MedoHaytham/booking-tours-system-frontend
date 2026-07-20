@@ -606,12 +606,12 @@ export default function ManageToursPage() {
                                   />
                                 </div>
                                 <div className="min-w-0">
-                                  <Link href={`/tour/${t.slug}`} className="font-semibold text-sm text-grey-700 truncate max-w-[180px]">
+                                  <Link href={`/tour/${t.slug}`} className="font-semibold text-sm text-grey-700 truncate max-w-45">
                                     <span className="hover:text-primary hover:underline transition-colors cursor-pointer">
                                       {t.name}
                                     </span>
                                   </Link>
-                                  <p className="text-xs text-grey-400 truncate max-w-[180px]">
+                                  <p className="text-xs text-grey-400 truncate max-w-45">
                                     {t.summary}
                                   </p>
                                 </div>

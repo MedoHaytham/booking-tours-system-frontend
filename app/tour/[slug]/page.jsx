@@ -154,7 +154,7 @@ export default function TourPage({ params }) {
       <section className="bg-grey-50 pull-up flex flex-col lg:flex-row">
         <div className="flex-[0_0_50%] bg-grey-100 flex justify-center px-6 sm:px-10 lg:px-[8vw] pt-16 lg:pt-[14vw] pb-12 lg:pb-[10vw]">
           <div className="w-full md:flex md:justify-between md:max-w-none md:items-start lg:block lg:max-w-md space-y-12">
-            <div className='md:mt-[55px] lg:mt-0'>
+            <div className='md:mt-13.75 lg:mt-0'>
               <h2 className="text-2xl uppercase font-bold bg-gradient-primary-text bg-clip-text text-transparent tracking-wide mb-8">
                 Quick facts
               </h2>
@@ -323,11 +323,11 @@ export default function TourPage({ params }) {
                 </div>
               )}
             </div>
-            <div className="w-full max-w-[370px] justify-self-center sm:justify-self-start lg:justify-self-end">
+            <div className="w-full max-w-92.5 justify-self-center sm:justify-self-start lg:justify-self-end">
               {!user ? (
                 <Link
                   href="/login"
-                  className="inline-block text-center w-full sm:w-[370px] bg-primary text-white uppercase text-sm sm:text-base rounded-full px-4 sm:px-10 py-4 transition-transform hover:-translate-y-0.5"
+                  className="inline-block text-center w-full sm:w-92.5 bg-primary text-white uppercase text-sm sm:text-base rounded-full px-4 sm:px-10 py-4 transition-transform hover:-translate-y-0.5"
                 >
                   Log in to book tour
                 </Link>

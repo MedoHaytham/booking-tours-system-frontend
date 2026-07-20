@@ -45,7 +45,7 @@ export default function SignupForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-10">
       {errorMsg && (
-        <div className="bg-red-50 border-l-4 border-error p-4 text-error rounded-[4px] text-sm font-medium">
+        <div className="bg-red-50 border-l-4 border-error p-4 text-error rounded-sm text-sm font-medium">
           {errorMsg}
         </div>
       )}
