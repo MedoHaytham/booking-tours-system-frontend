@@ -185,6 +185,20 @@ Browser → /api/v1/users/login
 
 ---
 
+## 🔑 Default Admin Credentials
+
+After seeding the backend database, a default **admin** account is available for testing the admin dashboard:
+
+| Field    | Value              |
+| :------- | :----------------- |
+| Email    | `admin@natours.io` |
+| Password | `test1234`         |
+
+> [!CAUTION]
+> These are development/testing credentials only. **Never use them in a production environment.**
+
+---
+
 ## 📜 Available Scripts
 
 | Script | Description |
